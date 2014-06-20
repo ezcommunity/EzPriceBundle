@@ -1,0 +1,9 @@
+parameters:
+    ezprice.fieldType.ezprice.class: EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\Type
+
+services:
+    ezprice.fieldType.ezprice.class:
+        parent: ezpublish.fieldType
+        class: %ezprice.fieldType.ezprice.class%
+        tags:
+            - {name: ezpublish.fieldType, alias: ezprice}
