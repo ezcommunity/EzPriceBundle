@@ -1,5 +1,6 @@
 parameters:
     ezprice.fieldType.ezprice.class: EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\Type
+    ezprice.fieldType.ezprice.converter.class: EzSystems\EzPriceBundle\eZ\Publish\Core\Persistence\Legacy\Content\FieldValue\Converter\Price
 
 services:
     ezprice.fieldType.ezprice.class:
@@ -7,3 +8,8 @@ services:
         class: %ezprice.fieldType.ezprice.class%
         tags:
             - {name: ezpublish.fieldType, alias: ezprice}
+
+    ezprice.fieldType.ezprice.converter:
+        class: %ezprice.fieldType.ezprice.converter.class%
+        tags:
+            - {name: ezpublish.storageEngine.legacy.converter, alias: ezprice, lazy: true, callback: '::create'}
