@@ -146,11 +146,13 @@ class Type extends FieldType
      *
      * @param \eZ\Publish\SPI\Persistence\Content\FieldValue $fieldValue
      *
-     * @return \eZ\Publish\Core\FieldType\BinaryBase\Value
+     * @return \eZ\Publish\Core\FieldType\Price\Value
      */
     public function fromPersistenceValue( FieldValue $fieldValue )
     {
-        if( !is_null( $fieldValue->externalData ) )
-            return new Value( $fieldValue->externalData );
+        if( !is_null( $fieldValue->data ) )
+        {
+            return new Value( array( 'price' => $fieldValue->data ) );
+        }
     }
 }
