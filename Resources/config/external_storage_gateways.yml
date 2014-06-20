@@ -1,0 +1,8 @@
+parameters:
+    crevillo.ezpricesbundle.fieldType.ezprice.storage_gateway.class: Crevillo\EzPricesBundle\eZ\Publish\Core\FieldType\Price\PriceStorage\Gateway\LegacyKernel
+
+services:
+    crevillo.ezpricesbundle.fieldType.ezprice.storage_gateway:
+        class: %crevillo.ezpricesbundle.fieldType.ezprice.storage_gateway.class%
+        tags:
+            - {name: ezpublish.fieldType.externalStorageHandler.gateway, alias: ezprice, identifier: LegacyStorage}
