@@ -15,7 +15,7 @@
         "ezsystems/ezpublish-legacy": "*"
     },
     "autoload": {
-        "psr-4": {"EzSystems\\EzPriceBundle": ""}
+        "psr-4": {"EzSystems\\EzPriceBundle\\": ""}
     },
     "target-dir": ""
 }
