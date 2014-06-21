@@ -4,22 +4,12 @@ namespace EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price;
 
 use eZ\Publish\Core\FieldType\FieldType;
 use eZ\Publish\SPI\Persistence\Content\FieldValue;
+use eZ\Publish\Core\Base\Exceptions\InvalidArgumentType;
 use eZ\Publish\SPI\FieldType\Value as SPIValue;
 use eZ\Publish\Core\FieldType\Value as BaseValue;
 
 class Type extends FieldType
 {
-    /**
-     * Validates the validatorConfiguration of a FieldDefinitionCreateStruct or FieldDefinitionUpdateStruct
-     *
-     * @param mixed $validatorConfiguration
-     *
-     * @return \eZ\Publish\SPI\FieldType\ValidationError[]
-     */
-    public function validateValidatorConfiguration( $validatorConfiguration )
-    {
-    }
-
     /**
      * Returns the field type identifier for this field type
      *
@@ -49,7 +39,7 @@ class Type extends FieldType
      * Returns the fallback default value of field type when no such default
      * value is provided in the field definition in content types.
      *
-     * @return \eZ\Publish\Core\FieldType\Float\Value
+     * @return \EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\Value
      */
     public function getEmptyValue()
     {
@@ -71,14 +61,25 @@ class Type extends FieldType
     /**
      * Inspects given $inputValue and potentially converts it into a dedicated value object.
      *
-     * @param int|float|\eZ\Publish\Core\FieldType\Float\Value $inputValue
+     * @param int|float|\EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\Value $inputValue
      *
-     * @return \eZ\Publish\Core\FieldType\Float\Value The potentially converted and structurally plausible value.
+     * @return \EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\Value The potentially converted and structurally plausible value.
      * @todo define all the ways a price could be entered
      *
      */
     protected function createValueFromInput( $inputValue )
     {
+        if ( is_int( $inputValue ) )
+        {
+            $inputValue = (float)$inputValue;
+        }
+
+        if ( is_float( $inputValue ) )
+        {
+            $inputValue = new Value( $inputValue );
+        }
+
+        return $inputValue;
     }
 
     /**
@@ -86,18 +87,26 @@ class Type extends FieldType
      *
      * @throws \eZ\Publish\API\Repository\Exceptions\InvalidArgumentException If the value does not match the expected structure.
      *
-     * @param \eZ\Publish\Core\FieldType\Float\Value $value
+     * @param \EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\Value $value
      *
      * @return void
      */
     protected function checkValueStructure( BaseValue $value )
     {
+        if ( !is_float( $value->price ) )
+        {
+            throw new InvalidArgumentType(
+                '$value->price',
+                'float',
+                $value->price
+            );
+        }
     }
 
     /**
      * Returns information for FieldValue->$sortKey relevant to the field type.
      *
-     * @param \eZ\Publish\Core\FieldType\Float\Value $value
+     * @param \eZ\Publish\Core\FieldType\Price\Value $value
      *
      * @return array
      */
@@ -112,21 +121,31 @@ class Type extends FieldType
      *
      * @param mixed $hash
      *
-     * @return \eZ\Publish\Core\FieldType\Float\Value $value
+     * @return \EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\Value $value
      */
     public function fromHash( $hash )
     {
+        if ( $hash === null )
+        {
+            return $this->getEmptyValue();
+        }
+        return new Value( $hash );
     }
 
     /**
      * Converts a $Value to a hash
      *
-     * @param \eZ\Publish\Core\FieldType\Float\Value $value
+     * @param \EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\Value $value
      *
      * @return mixed
      */
     public function toHash( SPIValue $value )
     {
+        if ( $this->isEmptyValue( $value ) )
+        {
+            return null;
+        }
+        return $value->price;
     }
 
     /**
