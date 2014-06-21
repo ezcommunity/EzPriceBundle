@@ -14,7 +14,7 @@ matrix:
 # test only master (+ Pull requests)
 branches:
   only:
-    - master
+    - tests_basics
 
 # install dependencies
 install: composer install --dev --prefer-source
