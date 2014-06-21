@@ -11,6 +11,17 @@ class Value extends BaseValue
      */
     public $price;
 
+    /**
+     * Construct a new Value object and initialize with $value
+     *
+     * @param float|null $value
+     */
+    public function __construct( $value = null )
+    {
+        $this->price = $value;
+    }
+
+
     public function __toString()
     {
         return (string)$this->price;
