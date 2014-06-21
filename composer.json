@@ -1,11 +1,11 @@
 {
     "name": "ezsystems/ez-price-bundle",
-    "description": "Products prices FieldType for eZ Publish Platform",
+    "description": "Products price FieldType for eZ Publish Platform",
     "license": "GPL-2.0",
     "authors": [
         {
             "name": "eZ Publish dev-team & eZ Community",
-            "homepage": "https://github.com/ezsystems/DemoBundle/graphs/contributors"
+            "homepage": "https://github.com/ezsystems/EzPriceBundle/graphs/contributors"
         }
     ],
     "minimum-stability": "dev",
