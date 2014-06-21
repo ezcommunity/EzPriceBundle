@@ -37,7 +37,7 @@ class Price implements Converter
      */
     public function toStorageValue( FieldValue $value, StorageFieldValue $storageFieldValue )
     {
-        $storageFieldValue->dataFloat = $value->price;
+        $storageFieldValue->dataFloat = $value->data;
         $storageFieldValue->sortKeyInt = $value->sortKey;
     }
 
