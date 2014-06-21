@@ -21,7 +21,7 @@ install: composer install --dev --prefer-dist
 
 # setup requirements for running unit tests
 before_script:
-  - cd vendor/ezsystems/ezpublish-kernel/config.php; cp config.php-DEVELOPMENT config.php; cd -
+  - cp vendor/ezsystems/ezpublish-kernel/config.php-DEVELOPMENT vendor/ezsystems/ezpublish-kernel/config.php
 
 # execute phpunit as the script command
 script:
