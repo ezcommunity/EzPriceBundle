@@ -1,0 +1,7 @@
+{% extends "EzPublishCoreBundle::content_fields.html.twig" %}
+
+{% block ezprice_field %}
+{% spaceless %}
+    Price: {{ field.value.price }}
+{% endspaceless %}
+{% endblock %}
