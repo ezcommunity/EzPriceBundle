@@ -98,6 +98,8 @@ class LegacyStorage extends Gateway
     *
     * @param int $fieldId
     * @param int $versionNo
+    *
+    * @return array
     */
     private function fetchPrice( $fieldId, $versionNo )
     {
