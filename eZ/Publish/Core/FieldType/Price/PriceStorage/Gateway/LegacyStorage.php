@@ -66,6 +66,7 @@ class LegacyStorage extends Gateway
     */
    public function storeFieldData( VersionInfo $versionInfo, Field $field )
    {
+
    }
 
    /**
@@ -75,8 +76,7 @@ class LegacyStorage extends Gateway
     */
    public function getFieldData( Field $field )
    {
-       $price = $this->fetchPrice( $field->id, $field->versionNo );
-       $field->value->externalData = array( 'price' => $price );
+       $field->value->externalData = $this->fetchPrice( $field->id, $field->versionNo );
    }
 
    /**
@@ -98,29 +98,41 @@ class LegacyStorage extends Gateway
      * @param int $fieldId
      * @param int $versionNo
      */
-    private function fetchPrice( $fieldId, $versionNo )
-    {
-        $dbHandler = $this->getConnection();
+     private function fetchPrice( $fieldId, $versionNo )
+     {
+         $price = array();
+         $dbHandler = $this->getConnection();
 
-        $selectQuery = $dbHandler->createSelectQuery();
-        $selectQuery->select( "data_float" )
-            ->from( $dbHandler->quoteTable( "ezcontentobject_attribute" ) )
-            ->where(
-                $selectQuery->expr->lAnd(
-                    $selectQuery->expr->eq(
-                        $dbHandler->quoteColumn( 'id' ),
-                        $selectQuery->bindValue( $fieldId )
-                    ),
-                    $selectQuery->expr->eq(
-                        $dbHandler->quoteColumn( 'version' ),
-                        $selectQuery->bindValue( $versionNo )
-                    )
-                )
-            );
+         $selectQuery = $dbHandler->createSelectQuery();
+         $selectQuery->select( array( 'data_float', 'data_text' ) )
+             ->from( $dbHandler->quoteTable( "ezcontentobject_attribute" ) )
+             ->where(
+                 $selectQuery->expr->lAnd(
+                     $selectQuery->expr->eq(
+                         $dbHandler->quoteColumn( 'id' ),
+                         $selectQuery->bindValue( $fieldId )
+                     ),
+                     $selectQuery->expr->eq(
+                         $dbHandler->quoteColumn( 'version' ),
+                         $selectQuery->bindValue( $versionNo )
+                     )
+                 )
+             );
 
-        $statement = $selectQuery->prepare();
-        $statement->execute();
+         $statement = $selectQuery->prepare();
+         $statement->execute();
+         $priceRow = $statement->fetch();
 
-        return $statement->fetchColumn();
-    }
+         // base price
+         $price['price'] = $priceRow['data_float'];
+         // get data_text and explode it
+         $rowDataText = explode( ',', $priceRow['data_text'] );
+         // vat type id is in the first position of the exploded data_text
+         $price['vat_type'] = $rowDataText[0];
+         // is_vat_included is in the second position. Convert to boolean here
+         // depending on the value
+         $price['is_vat_included'] = $rowDataText[1] == 1 ? true : false;
+
+         return $price;
+     }
 }
