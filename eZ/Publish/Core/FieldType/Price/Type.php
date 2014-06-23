@@ -76,6 +76,11 @@ class Type extends FieldType
 
         if ( is_float( $inputValue ) )
         {
+            $inputValue = array( 'price' => $inputValue );
+        }
+
+        if ( is_array( $inputValue ) )
+        {
             $inputValue = new Value( $inputValue );
         }
 
@@ -101,14 +106,23 @@ class Type extends FieldType
                 $value->price
             );
         }
+
+        if ( !is_bool( $value->is_vat_included ) )
+        {
+            throw new InvalidArgumentType(
+                '$value->is_vat_included',
+                'boolean',
+                $value->is_vat_included
+            );
+        }
     }
 
     /**
      * Returns information for FieldValue->$sortKey relevant to the field type.
      *
-     * @param \eZ\Publish\Core\FieldType\Price\Value $value
+     * @param \EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\Value $value
      *
-     * @return array
+     * @return float
      */
     protected function getSortInfo( BaseValue $value )
     {
@@ -145,7 +159,11 @@ class Type extends FieldType
         {
             return null;
         }
-        return $value->price;
+        return array(
+            'price' => $value->price,
+            'is_vat_included' => $value->is_vat_included,
+            'vat_percentage' => $value->vat_percentage
+        );
     }
 
     /**
@@ -169,9 +187,9 @@ class Type extends FieldType
      */
     public function fromPersistenceValue( FieldValue $fieldValue )
     {
-        if( !is_null( $fieldValue->data ) )
+        if( !is_null( $fieldValue->externalData ) )
         {
-            return new Value( array( 'price' => $fieldValue->data ) );
+            return new Value( $fieldValue->externalData );
         }
     }
 }

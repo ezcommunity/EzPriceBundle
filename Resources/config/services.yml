@@ -1,6 +1,8 @@
 parameters:
     ezprice.fieldType.ezprice.class: EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\Type
     ezprice.fieldType.ezprice.converter.class: EzSystems\EzPriceBundle\eZ\Publish\Core\Persistence\Legacy\Content\FieldValue\Converter\Price
+    ezprice.fieldType.ezprice.externalStorage.class: EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\PriceStorage
+    ezprice.fieldType.ezprice.storage_gateway.class: EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\PriceStorage\Gateway\LegacyStorage
 
 services:
     ezprice.fieldType.ezprice.class:
@@ -13,3 +15,13 @@ services:
         class: %ezprice.fieldType.ezprice.converter.class%
         tags:
             - {name: ezpublish.storageEngine.legacy.converter, alias: ezprice, lazy: true, callback: '::create'}
+
+    ezprice.fieldType.ezprice.externalStorage:
+        class: %ezprice.fieldType.ezprice.externalStorage.class%
+        tags:
+            - {name: ezpublish.fieldType.externalStorageHandler, alias: ezprice}
+
+    ezprice.fieldType.ezprice.storage_gateway:
+        class: %ezprice.fieldType.ezprice.storage_gateway.class%
+        tags:
+            - {name: ezpublish.fieldType.externalStorageHandler.gateway, alias: ezprice, identifier: LegacyStorage}
