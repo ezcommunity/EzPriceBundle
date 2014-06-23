@@ -91,48 +91,87 @@ class LegacyStorage extends Gateway
    {
    }
 
+   /**
+    * Query database for getting the price associated to the fieldId and
+    * versionNo
+    * Also get vat type used and it vat is excluded or included in the base price
+    *
+    * @param int $fieldId
+    * @param int $versionNo
+    */
+    private function fetchPrice( $fieldId, $versionNo )
+    {
+        $price = array();
+        $dbHandler = $this->getConnection();
+
+        $selectQuery = $dbHandler->createSelectQuery();
+        $selectQuery->select( array( 'data_float', 'data_text' ) )
+            ->from( $dbHandler->quoteTable( "ezcontentobject_attribute" ) )
+            ->where(
+                $selectQuery->expr->lAnd(
+                    $selectQuery->expr->eq(
+                        $dbHandler->quoteColumn( 'id' ),
+                        $selectQuery->bindValue( $fieldId )
+                    ),
+                    $selectQuery->expr->eq(
+                        $dbHandler->quoteColumn( 'version' ),
+                        $selectQuery->bindValue( $versionNo )
+                    )
+                )
+            );
+
+        $statement = $selectQuery->prepare();
+        $statement->execute();
+        $priceRow = $statement->fetch();
+
+        // base price
+        $price['price'] = $priceRow['data_float'];
+        // get data_text and explode it
+        $rowDataText = explode( ',', $priceRow['data_text'] );
+
+        // vat type id is in the first position of the exploded data_text
+        $price['selected_vat_type'] = $rowDataText[0];
+
+        // is_vat_included is in the second position. Convert to boolean here
+        // depending on the value
+        $price['is_vat_included'] = $rowDataText[1] == 1 ? true : false;
+
+        // vat_percengage depending of the vat type selected
+        $price['vat_percentage'] = $this->getVatPercentage( $price['selected_vat_type'] );
+
+        return $price;
+    }
+
     /**
-     * Query database for getting the price associated to the fieldId and
-     * versionNo
+     * Get Vat Percentage associated with Vat Type $vat_type
      *
-     * @param int $fieldId
-     * @param int $versionNo
+     * @todo Create vat Handler for getting percentage when dynamic
+     * Vat Type (-1) is used.
+     *
+     * @param int $vat_type
+     *
+     * @return float
      */
-     private function fetchPrice( $fieldId, $versionNo )
-     {
-         $price = array();
-         $dbHandler = $this->getConnection();
+    private function getVatPercentage( $vat_type )
+    {
+        if ( $vat_type != -1 )
+        {
+            $dbHandler = $this->getConnection();
+            $selectQuery = $dbHandler->createSelectQuery();
+            $selectQuery->select( 'percentage' )
+                ->from( $dbHandler->quoteTable( "ezvattype" ) )
+                ->where(
+                    $selectQuery->expr->eq(
+                        $dbHandler->quoteColumn( 'id' ),
+                        $selectQuery->bindValue( $vat_type )
+                    )
+                );
 
-         $selectQuery = $dbHandler->createSelectQuery();
-         $selectQuery->select( array( 'data_float', 'data_text' ) )
-             ->from( $dbHandler->quoteTable( "ezcontentobject_attribute" ) )
-             ->where(
-                 $selectQuery->expr->lAnd(
-                     $selectQuery->expr->eq(
-                         $dbHandler->quoteColumn( 'id' ),
-                         $selectQuery->bindValue( $fieldId )
-                     ),
-                     $selectQuery->expr->eq(
-                         $dbHandler->quoteColumn( 'version' ),
-                         $selectQuery->bindValue( $versionNo )
-                     )
-                 )
-             );
+            $statement = $selectQuery->prepare();
+            $statement->execute();
+            $vatPercentage = $statement->fetchColumn();
 
-         $statement = $selectQuery->prepare();
-         $statement->execute();
-         $priceRow = $statement->fetch();
-
-         // base price
-         $price['price'] = $priceRow['data_float'];
-         // get data_text and explode it
-         $rowDataText = explode( ',', $priceRow['data_text'] );
-         // vat type id is in the first position of the exploded data_text
-         $price['vat_type'] = $rowDataText[0];
-         // is_vat_included is in the second position. Convert to boolean here
-         // depending on the value
-         $price['is_vat_included'] = $rowDataText[1] == 1 ? true : false;
-
-         return $price;
-     }
+            return $vatPercentage;
+        }
+    }
 }
