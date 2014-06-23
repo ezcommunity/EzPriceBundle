@@ -171,7 +171,7 @@ class Type extends FieldType
     {
         if( !is_null( $fieldValue->externalData ) )
         {
-             return new Value( $fieldValue->externalData['price'] );
+            return new Value( $fieldValue->externalData['price'] );
         }
     }
 }

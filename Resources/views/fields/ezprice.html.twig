@@ -2,6 +2,8 @@
 
 {% block ezprice_field %}
 {% spaceless %}
-    Price: {{ field.value.price }}
+    {% if field.value %}
+        Price: {{ field.value.price }}
+    {% endif %}
 {% endspaceless %}
 {% endblock %}
