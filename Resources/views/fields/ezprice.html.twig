@@ -2,7 +2,7 @@
 
 {% block ezprice_field %}
 {% spaceless %}
-    {% if field.value %}
+    {% if not ez_is_field_empty( content, field ) %}
         Price: {{ field.value.price }}
     {% endif %}
 {% endspaceless %}
