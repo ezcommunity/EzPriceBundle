@@ -169,9 +169,9 @@ class Type extends FieldType
      */
     public function fromPersistenceValue( FieldValue $fieldValue )
     {
-        if( !is_null( $fieldValue->data ) )
+        if( !is_null( $fieldValue->externalData ) )
         {
-            return new Value( array( 'price' => $fieldValue->data ) );
+            return new Value( $fieldValue->externalData['price'] );
         }
     }
 }
