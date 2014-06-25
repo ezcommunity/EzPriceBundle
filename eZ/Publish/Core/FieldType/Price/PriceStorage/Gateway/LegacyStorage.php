@@ -107,24 +107,22 @@ class LegacyStorage extends Gateway
 
         // base price
         $price['price'] = $priceRow['data_float'];
+
         // get data_text and explode it
-        $rowDataText = explode( ',', $priceRow['data_text'] );
+        list( $isVatIncluded, $vatTypeId ) = explode( ',', $priceRow['data_text'] );
 
         // is_vat_included is in the second position. Convert to boolean here
         // depending on this value
-        $price['is_vat_included'] = $rowDataText[1] == 1 ? true : false;
+        $price['is_vat_included'] = $isVatIncluded == 1 ? true : false;
 
-        // vat_percengage depending of the vat type selected
-        $price['vat_percentage'] = $this->getVatPercentage( $price['selected_vat_type'] );
+        // vat_percentage depending of the vat type selected
+        $price['vat_percentage'] = $this->getVatPercentage( $vatTypeId );
 
         return $price;
     }
 
     /**
      * Get Vat Percentage associated with Vat Type $vat_type
-     *
-     * @todo Create vat Handler for getting percentage when dynamic
-     * Vat Type (-1) is used.
      *
      * @param int $vat_type
      *

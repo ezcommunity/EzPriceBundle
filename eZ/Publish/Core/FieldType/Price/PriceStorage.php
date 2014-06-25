@@ -39,7 +39,7 @@ class PriceStorage extends GatewayBasedStorage
     public function getFieldData( VersionInfo $versionInfo, Field $field, array $context )
     {
         $gateway = $this->getGateway( $context );
-        return $gateway->getFieldData( $field );
+        return $gateway->getPriceInfo( $field );
     }
 
     /**
