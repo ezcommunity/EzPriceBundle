@@ -27,23 +27,6 @@ class Value extends BaseValue
      */
     public $vat_percentage = 0;
 
-    /**
-     * Construct a new Value object and initialize with $value
-     *
-     * @param array|null $value
-     */
-    public function __construct( $value = null )
-    {
-        if ( $value !== null )
-        {
-            foreach ( $value as $key => $val )
-            {
-                $this->$key = $val;
-            }
-        }
-    }
-
-
     public function __toString()
     {
         return (string)$this->price;

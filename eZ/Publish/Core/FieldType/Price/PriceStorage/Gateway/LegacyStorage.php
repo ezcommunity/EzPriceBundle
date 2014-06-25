@@ -71,9 +71,10 @@ class LegacyStorage extends Gateway
    }
 
    /**
-    * Query database for getting the price associated to the fieldId and
-    * versionNo
-    * Also get vat percentage to apply and if vat is excluded or included in the base price
+    * Returns an array with 3 keys
+    *   price: will contain the base price for the Field
+    *   is_vat_included: if vat is included or excluded from the price
+    *   vat_percentage: VAT Rate to apply to the base price.
     *
     * @param int $fieldId
     * @param int $versionNo
@@ -83,6 +84,28 @@ class LegacyStorage extends Gateway
     private function fetchPriceData( $fieldId, $versionNo )
     {
         $price = array();
+
+        $priceLegacyData = $this->getPriceLegacyData( $fieldId, $versionNo );
+
+        $price['price'] = $priceLegacyData['data_float'];
+        list( $isVatIncluded, $vatTypeId ) = explode( ',', $priceLegacyData['data_text'] );
+        $price['is_vat_included'] = $isVatIncluded == 1 ? true : false;
+        $price['vat_percentage'] = $this->getVatPercentage( $vatTypeId );
+
+        return $price;
+    }
+
+    /**
+     * Queries database for get the data_float and data_text of the row
+     * with the id $fieldId and version $versionNo
+     *
+     * @param int $fieldId
+     * @param int $versionNo
+     *
+     * @return array
+     */
+    private function getPriceLegacyData( $fieldId, $versionNo )
+    {
         $dbHandler = $this->getConnection();
 
         $selectQuery = $dbHandler->createSelectQuery();
@@ -103,26 +126,14 @@ class LegacyStorage extends Gateway
 
         $statement = $selectQuery->prepare();
         $statement->execute();
-        $priceRow = $statement->fetch();
 
-        // base price
-        $price['price'] = $priceRow['data_float'];
-
-        // get data_text and explode it
-        list( $isVatIncluded, $vatTypeId ) = explode( ',', $priceRow['data_text'] );
-
-        // is_vat_included is in the second position. Convert to boolean here
-        // depending on this value
-        $price['is_vat_included'] = $isVatIncluded == 1 ? true : false;
-
-        // vat_percentage depending of the vat type selected
-        $price['vat_percentage'] = $this->getVatPercentage( $vatTypeId );
-
-        return $price;
+        return $statement->fetch();
     }
 
     /**
-     * Get Vat Percentage associated with Vat Type $vat_type
+     * Get Vat Percentage associated with Vat Type $vat_type or 0 in case automatic VAT is used
+     *
+     * @todo add the ability to work with automatic VAT Type
      *
      * @param int $vat_type
      *
@@ -149,5 +160,7 @@ class LegacyStorage extends Gateway
 
             return $vatPercentage;
         }
+
+        return 0;
     }
 }

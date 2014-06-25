@@ -1,10 +1,7 @@
 <?php
 /**
- * File containing the PriceStorage Converter class
- *
- * @copyright Copyright (C) eZ Systems AS. All rights reserved.
- * @license For full copyright and license information view LICENSE file distributed with this source code.
- * @version //autogentag//
+ * Price FieldType external storage handler.
+ * Handles the VAT rate.
  */
 
 namespace EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price;
@@ -15,7 +12,6 @@ use eZ\Publish\SPI\Persistence\Content\Field;
 
 /**
  * Converter for Price field type external storage
- *
  */
 class PriceStorage extends GatewayBasedStorage
 {
