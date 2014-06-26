@@ -3,6 +3,7 @@ parameters:
     ezprice.fieldType.ezprice.converter.class: EzSystems\EzPriceBundle\eZ\Publish\Core\Persistence\Legacy\Content\FieldValue\Converter\Price
     ezprice.fieldType.ezprice.externalStorage.class: EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\PriceStorage
     ezprice.fieldType.ezprice.storage_gateway.class: EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\PriceStorage\Gateway\LegacyStorage
+    ezprice.twig.extension.class: EzSystems\EzPriceBundle\Twig\Extension\PriceExtension
 
 services:
     ezprice.fieldType.ezprice.class:
@@ -28,3 +29,8 @@ services:
         class: %ezprice.fieldType.ezprice.storage_gateway.class%
         tags:
             - {name: ezpublish.fieldType.externalStorageHandler.gateway, alias: ezprice, identifier: LegacyStorage}
+
+    ezprice.twig.extension:
+        class: %ezprice.twig.extension.class%
+        tags:
+            - { name: twig.extension }
