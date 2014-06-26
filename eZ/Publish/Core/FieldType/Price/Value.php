@@ -13,11 +13,11 @@ use eZ\Publish\Core\FieldType\Value as BaseValue;
 class Value extends BaseValue
 {
     /**
-     * Base price
+     * Price without Vat
      *
      * @var float
      */
-    public $price;
+    public $price_ex_vat;
 
     /**
      * Is the VAT included with the price or not
@@ -35,6 +35,6 @@ class Value extends BaseValue
 
     public function __toString()
     {
-        return (string)$this->price;
+        return (string)$this->price_ex_vat;
     }
 }
