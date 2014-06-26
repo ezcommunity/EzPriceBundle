@@ -71,15 +71,12 @@ class LegacyStorage extends Gateway
    }
 
    /**
-    * Returns an array with 3 keys
-    *   price: will contain the base price for the Field
-    *   is_vat_included: if vat is included or excluded from the price
-    *   vat_percentage: VAT Rate to apply to the base price.
+    * Gets the Price Data.
     *
     * @param int $fieldId
     * @param int $versionNo
     *
-    * @return array
+    * @return array Price data. Keys: price, is_vat_included, vat_percentage
     */
     private function fetchPriceData( $fieldId, $versionNo )
     {
