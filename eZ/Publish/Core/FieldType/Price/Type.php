@@ -38,7 +38,7 @@ class Type extends FieldType
      */
     public function getName( SPIValue $value )
     {
-        return (string)$value->price;
+        return (string)$value->price_ex_vat;
     }
 
     /**
@@ -61,7 +61,7 @@ class Type extends FieldType
      */
     public function isEmptyValue( SPIValue $value )
     {
-        return $value->price === null;
+        return $value->price_ex_vat === null;
     }
 
     /**
@@ -82,7 +82,7 @@ class Type extends FieldType
 
         if ( is_float( $inputValue ) )
         {
-            $inputValue = array( 'price' => $inputValue );
+            $inputValue = array( 'price_ex_vat' => $inputValue );
         }
 
         if ( is_array( $inputValue ) )
@@ -104,12 +104,12 @@ class Type extends FieldType
      */
     protected function checkValueStructure( BaseValue $value )
     {
-        if ( !is_float( $value->price ) )
+        if ( !is_float( $value->price_ex_vat ) )
         {
             throw new InvalidArgumentType(
-                '$value->price',
+                '$value->price_ex_vat',
                 'float',
-                $value->price
+                $value->price_ex_vat
             );
         }
 
@@ -132,7 +132,7 @@ class Type extends FieldType
      */
     protected function getSortInfo( BaseValue $value )
     {
-        $intPrice = (int)($value->price * 100.00);
+        $intPrice = (int)($value->price_ex_vat * 100.00);
         return $intPrice;
     }
 
@@ -166,7 +166,7 @@ class Type extends FieldType
             return null;
         }
         return array(
-            'price' => $value->price,
+            'price_ex_vat' => $value->price_ex_vat,
             'is_vat_included' => $value->is_vat_included,
             'vat_percentage' => $value->vat_percentage
         );

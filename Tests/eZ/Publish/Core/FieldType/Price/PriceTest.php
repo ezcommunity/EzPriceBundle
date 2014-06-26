@@ -94,16 +94,16 @@ class PriceTest extends FieldTypeTest
     {
         return array(
             array(
-                array( 'price' => 'foo' ),
+                array( 'price_ex_vat' => 'foo' ),
                 'eZ\\Publish\\Core\\Base\\Exceptions\\InvalidArgumentException',
             ),
             array(
-                new PriceValue( array( 'price' => 'foo' ) ),
+                new PriceValue( array( 'price_ex_vat' => 'foo' ) ),
                 'eZ\\Publish\\Core\\Base\\Exceptions\\InvalidArgumentException',
             ),
             array(
                 new PriceValue(
-                    array( 'price' => 20, 'is_vat_included' => 'foo' )
+                    array( 'price_ex_vat' => 20, 'is_vat_included' => 'foo' )
                 ),
                 'eZ\\Publish\\Core\\Base\\Exceptions\\InvalidArgumentException',
             )
@@ -126,34 +126,34 @@ class PriceTest extends FieldTypeTest
             ),
             array(
                 array(
-                    'price' => 42.23,
+                    'price_ex_vat' => 42.23,
                     'is_vat_included' => false,
                     'vat_percentage' => 5.2
                 ),
                 new PriceValue(
                     array(
-                        'price' => 42.23,
+                        'price_ex_vat' => 42.23,
                         'is_vat_included' => false,
                         'vat_percentage' => 5.2
                     )
                 ),
             ),
             array(
-                array( 'price' => 23. ),
+                array( 'price_ex_vat' => 23. ),
                 new PriceValue(
                     array(
-                        'price' => 23.,
+                        'price_ex_vat' => 23.,
                         'is_vat_included' => false
                     )
                 )
             ),
             array(
                 new PriceValue(
-                    array( 'price' => 23.42 )
+                    array( 'price_ex_vat' => 23.42 )
                 ),
                 new PriceValue(
                     array(
-                        'price' => 23.42,
+                        'price_ex_vat' => 23.42,
                         'is_vat_included' => false,
                         'vat_percentage' => 0
                     )
@@ -176,10 +176,10 @@ class PriceTest extends FieldTypeTest
             ),
             array(
                 new PriceValue(
-                    array( 'price' => 23.42 )
+                    array( 'price_ex_vat' => 23.42 )
                 ),
                 array(
-                    'price' => 23.42,
+                    'price_ex_vat' => 23.42,
                     'is_vat_included' => false,
                     'vat_percentage' => 0
                 ),
@@ -187,12 +187,12 @@ class PriceTest extends FieldTypeTest
             array(
                 new PriceValue(
                     array(
-                        'price' => 23.42,
+                        'price_ex_vat' => 23.42,
                         'is_vat_included' => true
                     )
                 ),
                 array(
-                    'price' => 23.42,
+                    'price_ex_vat' => 23.42,
                     'is_vat_included' => true,
                     'vat_percentage' => 0
                 ),
@@ -200,13 +200,13 @@ class PriceTest extends FieldTypeTest
             array(
                 new PriceValue(
                     array(
-                        'price' => 23.42,
+                        'price_ex_vat' => 23.42,
                         'is_vat_included' => true,
                         'vat_percentage' => 18.5
                     )
                 ),
                 array(
-                    'price' => 23.42,
+                    'price_ex_vat' => 23.42,
                     'is_vat_included' => true,
                     'vat_percentage' => 18.5
                 ),
@@ -257,10 +257,10 @@ class PriceTest extends FieldTypeTest
                 new PriceValue,
             ),
             array(
-                array( 'price' => 23.42 ),
+                array( 'price_ex_vat' => 23.42 ),
                 new PriceValue(
                     array(
-                        'price' => 23.42
+                        'price_ex_vat' => 23.42
                     )
                 ),
             ),
@@ -279,7 +279,7 @@ class PriceTest extends FieldTypeTest
             array(
                 new PriceValue(
                     array(
-                        'price' => 23.42
+                        'price_ex_vat' => 23.42
                     )
                 ),
                 "23.42"
@@ -287,7 +287,7 @@ class PriceTest extends FieldTypeTest
             array(
                 new PriceValue(
                     array(
-                        'price' => 23.42,
+                        'price_ex_vat' => 23.42,
                         'is_vat_included' => true,
                         'vat_percentage' => 18
                     )
@@ -311,7 +311,7 @@ class PriceTest extends FieldTypeTest
                 array(),
                 new PriceValue(
                     array(
-                        'price' => 7.5
+                        'price_ex_vat' => 7.5
                     )
                 ),
             ),
