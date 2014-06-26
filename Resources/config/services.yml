@@ -18,6 +18,9 @@ services:
 
     ezprice.fieldType.ezprice.externalStorage:
         class: %ezprice.fieldType.ezprice.externalStorage.class%
+        arguments:
+            - []
+            - @?logger
         tags:
             - {name: ezpublish.fieldType.externalStorageHandler, alias: ezprice}
 

@@ -12,6 +12,7 @@ namespace EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\PriceStorage\G
 use eZ\Publish\Core\Persistence\Database\DatabaseHandler;
 use \EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\PriceStorage\Gateway;
 use eZ\Publish\SPI\Persistence\Content\Field;
+use eZ\Publish\API\Repository\Exceptions\NotImplementedException;
 
 /**
  * Price field type external storage gateway implementation using Zeta Database Component.
@@ -60,15 +61,17 @@ class LegacyStorage extends Gateway
        return $this->dbHandler;
    }
 
-   /**
-    * Gets the price for the given field
-    *
-    * @see \EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\PriceStorage\Gateway
-    */
-   public function getPriceInfo( Field $field )
-   {
-       $field->value->externalData = $this->fetchPriceData( $field->id, $field->versionNo );
-   }
+    /**
+     * Gets the price for the given field
+     *
+     * @see \EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\PriceStorage\Gateway
+     * @throws NotImplementedException If the field's VAT handling is set to automatic
+     *
+     */
+    public function getPriceInfo( Field $field )
+    {
+        $field->value->externalData = $this->fetchPriceData( $field->id, $field->versionNo );
+    }
 
    /**
     * Gets the Price Data.
@@ -76,12 +79,14 @@ class LegacyStorage extends Gateway
     * @param int $fieldId
     * @param int $versionNo
     *
+    * @throws NotImplementedException If the field's VAT handling is set to automatic
+    *
     * @return array Price data. Keys: price, is_vat_included, vat_percentage
     */
     private function fetchPriceData( $fieldId, $versionNo )
     {
-        $price = array();
 
+        $price = array();
         $priceLegacyData = $this->getPriceLegacyData( $fieldId, $versionNo );
 
         $price['price'] = $priceLegacyData['data_float'];
@@ -134,30 +139,32 @@ class LegacyStorage extends Gateway
      *
      * @param int $vat_type
      *
+     * @throws NotImplementedException if vat_type is -1 (Automatic)
+     *
      * @return float
      */
     private function getVatPercentage( $vat_type )
     {
-        if ( $vat_type != -1 )
+        if ( $vat_type == -1 )
         {
-            $dbHandler = $this->getConnection();
-            $selectQuery = $dbHandler->createSelectQuery();
-            $selectQuery->select( 'percentage' )
-                ->from( $dbHandler->quoteTable( "ezvattype" ) )
-                ->where(
-                    $selectQuery->expr->eq(
-                        $dbHandler->quoteColumn( 'id' ),
-                        $selectQuery->bindValue( $vat_type )
-                    )
-                );
-
-            $statement = $selectQuery->prepare();
-            $statement->execute();
-            $vatPercentage = $statement->fetchColumn();
-
-            return $vatPercentage;
+            throw new NotImplementedException( 'Automatic VAT Handling is not implemented yet' );
         }
 
-        return 0;
+        $dbHandler = $this->getConnection();
+        $selectQuery = $dbHandler->createSelectQuery();
+        $selectQuery->select( 'percentage' )
+            ->from( $dbHandler->quoteTable( "ezvattype" ) )
+            ->where(
+                $selectQuery->expr->eq(
+                    $dbHandler->quoteColumn( 'id' ),
+                    $selectQuery->bindValue( $vat_type )
+                )
+            );
+
+        $statement = $selectQuery->prepare();
+        $statement->execute();
+        $vatPercentage = $statement->fetchColumn();
+
+        return $vatPercentage;
     }
 }
