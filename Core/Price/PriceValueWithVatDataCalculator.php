@@ -18,22 +18,25 @@ use EzSystems\EzPriceBundle\API\Price\PriceValueWithVatDataCalculator as PriceVa
  */
 class PriceValueWithVatDataCalculator implements PriceValueWithVatDataCalculatorInterface
 {
-    public function getValueWithVatData( array $price, VatRate $vatRate )
+    public function getValueWithVatData( PriceValue $value, VatRate $vatRate )
     {
-        $priceWithVatInfo = $price;
+        $properties = array(
+            'price' => $value->price,
+            'isVatIncluded' => $value->isVatIncluded
+        );
 
         $vatRatio = 1 + ( $vatRate->percentage / 100 );
-        if ( $price['isVatIncluded'] )
+        if ( $value->isVatIncluded )
         {
-            $priceWithVatInfo['priceIncludingVat'] = $price['price'];
-            $priceWithVatInfo['priceExcludingVat'] = $price['price'] / $vatRatio;
+            $properties['priceIncludingVat'] = $value->price;
+            $properties['priceExcludingVat'] = $value->price / $vatRatio;
         }
         else
         {
-            $priceWithVatInfo['priceExcludingVat'] = $price['price'];
-            $priceWithVatInfo['priceIncludingVat'] = $price['price'] * $vatRatio;
+            $properties['priceExcludingVat'] = $value->price;
+            $properties['priceIncludingVat'] = $value->price * $vatRatio;
         }
 
-        return $priceWithVatInfo;
+        return new PriceWithVatData( $properties );
     }
 }

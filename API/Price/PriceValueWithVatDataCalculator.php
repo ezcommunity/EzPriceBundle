@@ -21,5 +21,5 @@ interface PriceValueWithVatDataCalculator
      *
      * @return \EzSystems\EzPriceBundle\API\Price\Values\PriceWithVatData
      */
-    public function getValueWithVatData( array $value, VatRate $vatRate );
+    public function getValueWithVatData( PriceValue $value, VatRate $vatRate );
 }

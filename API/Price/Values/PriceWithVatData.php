@@ -11,6 +11,10 @@ use EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\Value as PriceValue;
 
 /**
  * A Price\Value with extra information about VAT
+ *
+ * @property-read float $priceIncludingVat
+ * @property-read float $priceExcludingVat
+ * @property-read float $vatRate
  */
 class PriceWithVatData extends PriceValue
 {
