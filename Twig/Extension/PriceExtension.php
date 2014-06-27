@@ -6,9 +6,9 @@
  * @license For full copyright and license information view LICENSE file distributed with this source code.
  */
 
-namespace EzSystems\EzPriceBundle\Twig\Extension\PriceExtension;
+namespace EzSystems\EzPriceBundle\Twig\Extension;
 
-use EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\Value as PriceValue;
+use eZ\Publish\API\Repository\Values\Content\Field;
 use Twig_Extension;
 use Twig_SimpleFunction;
 
@@ -46,24 +46,24 @@ class PriceExtension extends Twig_Extension
     }
 
     /**
-     * Returns the price associated to the Price $price without VAT applied
+     * Returns the price associated to the Field $price without VAT applied
      *
-     * @param \EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\Value $price
+     * @param \eZ\Publish\API\Repository\Values\Content\Field $price
      *
      * @return string
      */
-    public function priceWithoutVAT( PriceValue $price )
+    public function priceWithoutVAT( Field $price )
     {
     }
 
     /**
-     * Returns the price associated to the Price $price with the VAT applied
+     * Returns the price associated to the Field $price with the VAT applied
      *
-     * @param \EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\Value $price
+     * @param \eZ\Publish\API\Repository\Values\Content\Field $price
      *
      * @return string
      */
-    public function priceWithVAT( PriceValue $price )
+    public function priceWithVAT( Field $price )
     {
     }
 }
