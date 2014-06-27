@@ -38,14 +38,19 @@ class PriceTest extends PHPUnit_Framework_TestCase
      */
     public function testToStorageValue()
     {
-        $fieldValue = new FieldValue;
-        $fieldValue->data = 3.1415;
+        $price = 3.1415;
+        $isVatIncluded = 1;
+
+        $fieldValue = new FieldValue(
+            array( 'data' => array( 'price' => $price, 'isVatIncluded' => $isVatIncluded ) )
+        );
 
         $storageFieldValue = new StorageFieldValue;
 
         $this->converter->toStorageValue( $fieldValue, $storageFieldValue );
 
-        self::assertEquals( $fieldValue->data, $storageFieldValue->dataFloat );
+        self::assertEquals( $price, $storageFieldValue->dataFloat );
+        self::assertEquals( "1,1", $storageFieldValue->dataText );
     }
 
     /**
@@ -53,13 +58,21 @@ class PriceTest extends PHPUnit_Framework_TestCase
      */
     public function testToFieldValue()
     {
-        $storageFieldValue = new StorageFieldValue;
-        $storageFieldValue->dataFloat = 3.1415;
+        $isVatIncluded = 1;
+        $price = 3.1415;
+
+        $storageFieldValue = new StorageFieldValue(
+            array(
+                'dataFloat' => $price,
+                'dataText' => "$isVatIncluded,1"
+            )
+        );
 
         $fieldValue = new FieldValue;
 
         $this->converter->toFieldValue( $storageFieldValue, $fieldValue );
 
-        self::assertEquals( $storageFieldValue->dataFloat, $fieldValue->data );
+        self::assertEquals( $price, $fieldValue->data['price'] );
+        self::assertEquals( $isVatIncluded, $fieldValue->data['isVatIncluded'] );
     }
 }

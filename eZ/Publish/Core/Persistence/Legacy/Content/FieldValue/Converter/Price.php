@@ -30,13 +30,20 @@ class Price implements Converter
 
     public function toStorageValue( FieldValue $value, StorageFieldValue $storageFieldValue )
     {
-        $storageFieldValue->dataFloat = $value->data;
+        $storageFieldValue->dataFloat = $value->data['price'];
+        $storageFieldValue->dataText = (int)$value->data['isVatIncluded'] . ',1';
         $storageFieldValue->sortKeyInt = $value->sortKey;
     }
 
     public function toFieldValue( StorageFieldValue $value, FieldValue $fieldValue )
     {
-        $fieldValue->data = $value->dataFloat;
+        $fieldValue->data = array( 'price' => $value->dataFloat );
+
+        if ( strstr( $value->dataText, ',' ) !== false )
+        {
+            list( $isVatIncluded ) = explode( ',', $value->dataText );
+            $fieldValue->data['isVatIncluded'] = (bool)$isVatIncluded;
+        }
         $fieldValue->sortKey = $value->sortKeyInt;
     }
 

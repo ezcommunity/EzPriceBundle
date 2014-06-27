@@ -151,7 +151,7 @@ class Type extends FieldType
         {
             return null;
         }
-        return $value->price;
+        return (array)$value;
     }
 
     /**
@@ -175,9 +175,10 @@ class Type extends FieldType
      */
     public function fromPersistenceValue( FieldValue $fieldValue )
     {
-        if( !is_null( $fieldValue->data ) )
+        if ( isset( $fieldValue->data['price'] ) && $fieldValue->data['price'] != null )
         {
-            return new Value( array( 'price' => $fieldValue->data ) );
+            $isVatIncluded = isset( $fieldValue->data['is_vat_included'] ) ? (bool)$fieldValue->data['is_vat_included'] : true;
+            return new Value( $fieldValue->data['price'], $isVatIncluded );
         }
     }
 }

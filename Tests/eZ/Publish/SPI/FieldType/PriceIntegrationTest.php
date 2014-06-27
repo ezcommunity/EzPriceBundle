@@ -74,7 +74,7 @@ class PriceIntegrationTest extends BaseIntegrationTest
     {
         return new Content\FieldValue(
             array(
-                'data'         => 42.42,
+                'data'         => array( 'price' => 42.42, 'isVatIncluded' => true ),
                 'externalData' => null,
                 'sortKey'      => 4242,
             )
@@ -92,7 +92,7 @@ class PriceIntegrationTest extends BaseIntegrationTest
     {
         return new Content\FieldValue(
             array(
-                'data'         => 23.23,
+                'data'         => array( 'price' => 23.23, 'isVatIncluded' => false ),
                 'externalData' => null,
                 'sortKey'      => 2323,
             )
