@@ -57,7 +57,11 @@ class PriceExtensionTest extends Twig_Test_IntegrationTestCase
     {
         return new Field(
             array(
+<<<<<<< HEAD
                 'value' => new PriceValue(
+=======
+                'value' => new Value(
+>>>>>>> Made the Calculator return a Value
                     array(
                         'price' => $price,
                         'isVatIncluded' => $isVatIncluded
