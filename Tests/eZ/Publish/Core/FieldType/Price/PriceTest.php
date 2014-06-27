@@ -94,17 +94,19 @@ class PriceTest extends FieldTypeTest
     {
         return array(
             array(
-                'foo',
+                array( 'price' => 'foo' ),
                 'eZ\\Publish\\Core\\Base\\Exceptions\\InvalidArgumentException',
             ),
             array(
-                array(),
+                new PriceValue( array( 'price' => 'foo' ) ),
                 'eZ\\Publish\\Core\\Base\\Exceptions\\InvalidArgumentException',
             ),
             array(
-                new PriceValue( 'foo' ),
+                new PriceValue(
+                    array( 'price' => 20, 'is_vat_included' => 'foo' )
+                ),
                 'eZ\\Publish\\Core\\Base\\Exceptions\\InvalidArgumentException',
-            ),
+            )
         );
     }
 
@@ -112,29 +114,6 @@ class PriceTest extends FieldTypeTest
     /**
      * Data provider for valid input to acceptValue().
      *
-     * Returns an array of data provider sets with 2 arguments: 1. The valid
-     * input to acceptValue(), 2. The expected return value from acceptValue().
-     * For example:
-     *
-     * <code>
-     *  return array(
-     *      array(
-     *          null,
-     *          null
-     *      ),
-     *      array(
-     *          __FILE__,
-     *          new BinaryFileValue( array(
-     *              'path' => __FILE__,
-     *              'fileName' => basename( __FILE__ ),
-     *              'fileSize' => filesize( __FILE__ ),
-     *              'downloadCount' => 0,
-     *              'mimeType' => 'text/plain',
-     *          ) )
-     *      ),
-     *      // ...
-     *  );
-     * </code>
      *
      * @return array
      */
@@ -146,52 +125,45 @@ class PriceTest extends FieldTypeTest
                 new PriceValue,
             ),
             array(
-                42.23,
-                new PriceValue( 42.23 ),
+                array(
+                    'price' => 42.23,
+                    'is_vat_included' => false,
+                    'vat_percentage' => 5.2
+                ),
+                new PriceValue(
+                    array(
+                        'price' => 42.23,
+                        'is_vat_included' => false,
+                        'vat_percentage' => 5.2
+                    )
+                ),
             ),
             array(
-                23,
-                new PriceValue( 23. ),
+                array( 'price' => 23. ),
+                new PriceValue(
+                    array(
+                        'price' => 23.,
+                        'is_vat_included' => false
+                    )
+                )
             ),
             array(
-                new PriceValue( 23.42 ),
-                new PriceValue( 23.42 ),
+                new PriceValue(
+                    array( 'price' => 23.42 )
+                ),
+                new PriceValue(
+                    array(
+                        'price' => 23.42,
+                        'is_vat_included' => false,
+                        'vat_percentage' => 0
+                    )
+                ),
             ),
         );
     }
 
     /**
      * Provide input for the toHash() method
-     *
-     * Returns an array of data provider sets with 2 arguments: 1. The valid
-     * input to toHash(), 2. The expected return value from toHash().
-     * For example:
-     *
-     * <code>
-     *  return array(
-     *      array(
-     *          null,
-     *          null
-     *      ),
-     *      array(
-     *          new BinaryFileValue( array(
-     *              'path' => 'some/file/here',
-     *              'fileName' => 'sindelfingen.jpg',
-     *              'fileSize' => 2342,
-     *              'downloadCount' => 0,
-     *              'mimeType' => 'image/jpeg',
-     *          ) ),
-     *          array(
-     *              'path' => 'some/file/here',
-     *              'fileName' => 'sindelfingen.jpg',
-     *              'fileSize' => 2342,
-     *              'downloadCount' => 0,
-     *              'mimeType' => 'image/jpeg',
-     *          )
-     *      ),
-     *      // ...
-     *  );
-     * </code>
      *
      * @return array
      */
@@ -203,8 +175,41 @@ class PriceTest extends FieldTypeTest
                 null,
             ),
             array(
-                new PriceValue( 23.42 ),
-                23.42,
+                new PriceValue(
+                    array( 'price' => 23.42 )
+                ),
+                array(
+                    'price' => 23.42,
+                    'is_vat_included' => false,
+                    'vat_percentage' => 0
+                ),
+            ),
+            array(
+                new PriceValue(
+                    array(
+                        'price' => 23.42,
+                        'is_vat_included' => true
+                    )
+                ),
+                array(
+                    'price' => 23.42,
+                    'is_vat_included' => true,
+                    'vat_percentage' => 0
+                ),
+            ),
+            array(
+                new PriceValue(
+                    array(
+                        'price' => 23.42,
+                        'is_vat_included' => true,
+                        'vat_percentage' => 18.5
+                    )
+                ),
+                array(
+                    'price' => 23.42,
+                    'is_vat_included' => true,
+                    'vat_percentage' => 18.5
+                ),
             ),
         );
     }
@@ -252,8 +257,12 @@ class PriceTest extends FieldTypeTest
                 new PriceValue,
             ),
             array(
-                23.42,
-                new PriceValue( 23.42 ),
+                array( 'price' => 23.42 ),
+                new PriceValue(
+                    array(
+                        'price' => 23.42
+                    )
+                ),
             ),
         );
     }
@@ -267,7 +276,24 @@ class PriceTest extends FieldTypeTest
     {
         return array(
             array( $this->getEmptyValueExpectation(), "" ),
-            array( new PriceValue( 23.42 ), "23.42" )
+            array(
+                new PriceValue(
+                    array(
+                        'price' => 23.42
+                    )
+                ),
+                "23.42"
+            ),
+            array(
+                new PriceValue(
+                    array(
+                        'price' => 23.42,
+                        'is_vat_included' => true,
+                        'vat_percentage' => 18
+                    )
+                ),
+                "23.42"
+            )
         );
     }
 
@@ -275,44 +301,6 @@ class PriceTest extends FieldTypeTest
      * Provides data sets with validator configuration and/or field settings and
      * field value which are considered valid by the {@link validate()} method.
      *
-     * ATTENTION: This is a default implementation, which must be overwritten if
-     * a FieldType supports validation!
-     *
-     * For example:
-     *
-     * <code>
-     *  return array(
-     *      array(
-     *          array(
-     *              "validatorConfiguration" => array(
-     *                  "StringLengthValidator" => array(
-     *                      "minStringLength" => 2,
-     *                      "maxStringLength" => 10,
-     *                  ),
-     *              ),
-     *          ),
-     *          new TextLineValue( "lalalala" ),
-     *      ),
-     *      array(
-     *          array(
-     *              "fieldSettings" => array(
-     *                  'isMultiple' => true
-     *              ),
-     *          ),
-     *          new CountryValue(
-     *              array(
-     *                  "BE" => array(
-     *                      "Name" => "Belgium",
-     *                      "Alpha2" => "BE",
-     *                      "Alpha3" => "BEL",
-     *                      "IDC" => 32,
-     *                  ),
-     *              ),
-     *          ),
-     *      ),
-     *      // ...
-     *  );
-     * </code>
      *
      * @return array
      */
@@ -321,7 +309,11 @@ class PriceTest extends FieldTypeTest
         return array(
             array(
                 array(),
-                new PriceValue( 7.5 ),
+                new PriceValue(
+                    array(
+                        'price' => 7.5
+                    )
+                ),
             ),
         );
     }

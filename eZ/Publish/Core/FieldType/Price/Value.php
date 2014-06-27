@@ -13,19 +13,25 @@ use eZ\Publish\Core\FieldType\Value as BaseValue;
 class Value extends BaseValue
 {
     /**
+     * Base price
+     *
      * @var float
      */
     public $price;
 
     /**
-     * Construct a new Value object and initialize with $value
+     * Is the VAT included with the price or not
      *
-     * @param float|null $value
+     * @var bool
      */
-    public function __construct( $value = null )
-    {
-        $this->price = $value;
-    }
+    public $is_vat_included = false;
+
+    /**
+     * Percentage associated with the VAT
+     *
+     * @var float
+     */
+    public $vat_percentage = 0;
 
     public function __toString()
     {
