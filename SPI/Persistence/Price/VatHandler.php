@@ -11,13 +11,14 @@ namespace EzSystems\EzPriceBundle\SPI\Persistence\Price;
 interface VatHandler
 {
     /**
-     * Loads a VatRate object from its $vatId
+     * Loads the VAT rate for $fieldId in $versionNo
      *
      * @throws \eZ\Publish\API\Repository\Exceptions\NotFoundException If the specified vat is not found
      *
-     * @param mixed $vatId
+     * @param mixed $fieldId
+     * @param int $versionNo
      *
      * @return \EzSystems\EzPriceBundle\API\Price\Values\VatRate
      */
-    public function load( $vatId );
+    public function load( $fieldId, $versionNo );
 }

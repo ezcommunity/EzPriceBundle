@@ -9,20 +9,35 @@
 namespace EzSystems\EzPriceBundle\Core\Persistence\Legacy\Price;
 
 use EzSystems\EzPriceBundle\SPI\Persistence\Price\VatHandler as VatHandlerInterface;
+use EzSystems\EzPriceBundle\Core\Persistence\Legacy\Price\Gateway;
 
 class VatHandler implements VatHandlerInterface
 {
     /**
-     * Loads a VatRate object from its $vatId
+     * @var \EzSystems\EzPriceBundle\Core\Persistence\Legacy\Price\Gateway
+     */
+    protected $gateway;
+
+    /**
+     * @param \EzSystems\EzPriceBundle\Core\Persistence\Legacy\Price\Gateway $gateway
+     */
+    public function __construct( Gateway $gateway )
+    {
+        $this->gateway = $gateway;
+    }
+
+    /**
+     * Loads the VAT rate for $fieldId in $versionNo
      *
      * @throws \eZ\Publish\API\Repository\Exceptions\NotFoundException If the specified vat is not found
      *
-     * @param mixed $vatId
+     * @param mixed $fieldId
+     * @param int $versionNo
      *
      * @return \EzSystems\EzPriceBundle\API\Price\Values\VatRate
      */
-    public function load( $vatId )
+    public function load( $fieldId, $versionNo )
     {
-
+        return $this->gateway->getVatRateData( $fieldId, $versionNo );
     }
 }
