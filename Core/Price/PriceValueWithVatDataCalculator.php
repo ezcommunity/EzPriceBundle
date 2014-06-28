@@ -1,10 +1,9 @@
 <?php
 /**
- * This file is part of the eZ Publish Legacy package
+ * This file is part of the EzPriceBundle package.
  *
  * @copyright Copyright (C) eZ Systems AS. All rights reserved.
- * @license For full copyright and license information view LICENSE file distributd with this source code.
- * @version //autogentag//
+ * @license For full copyright and license information view LICENSE file distributed with this source code.
  */
 namespace EzSystems\EzPriceBundle\Core\Price;
 
@@ -18,25 +17,35 @@ use EzSystems\EzPriceBundle\API\Price\PriceValueWithVatDataCalculator as PriceVa
  */
 class PriceValueWithVatDataCalculator implements PriceValueWithVatDataCalculatorInterface
 {
-    public function getValueWithVatData( PriceValue $value, VatRate $vatRate )
+    /**
+     * Returns an object adding the price with and without Vat applied
+     *
+     * @param \EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\Value $price
+     * @param VatRate $vatRate
+     *
+     * @return \EzSystems\EzPriceBundle\API\Price\Values\PriceWithVatData
+     */
+    public function getValueWithVatData( PriceValue $price, VatRate $vatRate )
     {
-        $properties = array(
-            'price' => $value->price,
-            'isVatIncluded' => $value->isVatIncluded
+        $priceWithVatInfo = array(
+            'price' => $price->price,
+            'isVatIncluded' => $price->isVatIncluded
         );
 
         $vatRatio = 1 + ( $vatRate->percentage / 100 );
-        if ( $value->isVatIncluded )
+        if ( $price->isVatIncluded )
         {
-            $properties['priceIncludingVat'] = $value->price;
-            $properties['priceExcludingVat'] = $value->price / $vatRatio;
+            $priceWithVatInfo['priceIncludingVat'] = $price->price;
+            $priceWithVatInfo['priceExcludingVat'] = $price->price / $vatRatio;
         }
         else
         {
-            $properties['priceExcludingVat'] = $value->price;
-            $properties['priceIncludingVat'] = $value->price * $vatRatio;
+            $priceWithVatInfo['priceExcludingVat'] = $price->price;
+            $priceWithVatInfo['priceIncludingVat'] = $price->price * $vatRatio;
         }
 
-        return new PriceWithVatData( $properties );
+        $priceWithVatInfo['vatRate'] = $vatRate->percentage;
+
+        return new PriceWithVatData( $priceWithVatInfo );
     }
 }
