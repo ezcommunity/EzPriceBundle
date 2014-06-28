@@ -15,6 +15,7 @@ use EzSystems\EzPriceBundle\API\Price\Values\VatRate;
 use EzSystems\EzPriceBundle\Core\Price\PriceValueWithVatDataCalculator;
 use EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\Value as PriceValue;
 use EzSystems\EzPriceBundle\Twig\Extension\PriceExtension;
+use Psr\Log\LoggerInterface;
 use Twig_Test_IntegrationTestCase;
 
 /**
@@ -23,6 +24,11 @@ use Twig_Test_IntegrationTestCase;
 class PriceExtensionTest extends Twig_Test_IntegrationTestCase
 {
     /**
+     * @var \Psr\Log\LoggerInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $loggerMock;
+
+    /**
      * @return array
      */
     protected function getExtensions()
@@ -30,9 +36,25 @@ class PriceExtensionTest extends Twig_Test_IntegrationTestCase
         return [
             new PriceExtension(
                 $this->getVatServiceMock(),
-                new PriceValueWithVatDataCalculator()
+                new PriceValueWithVatDataCalculator(),
+                $this->getLoggerMock()
             )
         ];
+    }
+
+    /**
+     * @return \Psr\Log\LoggerInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function getLoggerMock()
+    {
+        if ( !isset( $this->loggerMock ) )
+        {
+            $this->loggerMock = $this->getMockForAbstractClass(
+                "Psr\\Log\\LoggerInterface"
+            );
+        }
+
+        return $this->loggerMock;
     }
 
     private function getVatServiceMock()
