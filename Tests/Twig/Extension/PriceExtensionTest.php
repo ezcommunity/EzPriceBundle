@@ -13,6 +13,7 @@ use eZ\Publish\Core\Repository\Values\Content\VersionInfo;
 use EzSystems\EzPriceBundle\API\Price\Values\PriceWithVatData;
 use EzSystems\EzPriceBundle\API\Price\Values\VatRate;
 use EzSystems\EzPriceBundle\Core\Price\PriceValueWithVatDataCalculator;
+use EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\Value;
 use EzSystems\EzPriceBundle\Twig\Extension\PriceExtension;
 use Twig_Test_IntegrationTestCase;
 
@@ -56,9 +57,11 @@ class PriceExtensionTest extends Twig_Test_IntegrationTestCase
     {
         return new Field(
             array(
-                'value' => array(
-                    'price' => $price,
-                    'isVatIncluded' => $isVatIncluded
+                'value' => new Value(
+                    array(
+                        'price' => $price,
+                        'isVatIncluded' => $isVatIncluded
+                    )
                 )
             )
         );

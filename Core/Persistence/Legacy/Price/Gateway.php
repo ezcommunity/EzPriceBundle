@@ -6,15 +6,17 @@
  * @license For full copyright and license information view LICENSE file distributed with this source code.
  */
 
-namespace EzSystems\EzPriceBundle\API\Price;
+namespace EzSystems\EzPriceBundle\Core\Persistence\Legacy\Price;
 
-interface VatService
+abstract class Gateway
 {
     /**
-     * Loads the VAT rate for $fieldId in $versionNo
+     * Returns an array with basic tag data
+     *
      * @param mixed $fieldId
      * @param int $versionNo
-     * @return \EzSystems\EzPriceBundle\API\Price\Values\VatRate
+     *
+     * @return array
      */
-    public function loadVatRate( $fieldId, $versionNo );
+    abstract public function getVatRateData( $fieldId, $versionNo );
 }

@@ -10,6 +10,7 @@ namespace EzSystems\EzPriceBundle\Tests\Core\Price;
 
 use EzSystems\EzPriceBundle\API\Price\Values\VatRate;
 use EzSystems\EzPriceBundle\Core\Price\PriceValueWithVatDataCalculator;
+use EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\Value as PriceValue;
 use PHPUnit_Framework_TestCase;
 
 /**
@@ -27,9 +28,11 @@ class PriceValueWithVatDataCalculatorTest extends PHPUnit_Framework_TestCase
 
     public function testVatDataVatExcluded()
     {
-        $price = array(
-            'price' => 120.6,
-            'isVatIncluded' => true
+        $price = new PriceValue(
+            array(
+                'price' => 120.6,
+                'isVatIncluded' => true
+            )
         );
 
         $vatRate = new VatRate(
@@ -44,17 +47,19 @@ class PriceValueWithVatDataCalculatorTest extends PHPUnit_Framework_TestCase
             $vatRate
         );
 
-        self::assertEquals( true, $priceWithVat['isVatIncluded'] );
-        self::assertEquals( 120.6, $priceWithVat['price'] );
-        self::assertEquals( 120.6, $priceWithVat['priceIncludingVat'] );
-        self::assertEquals( 100, $priceWithVat['priceExcludingVat'] );
+        self::assertEquals( true, $priceWithVat->isVatIncluded );
+        self::assertEquals( 120.6, $priceWithVat->price );
+        self::assertEquals( 120.6, $priceWithVat->priceIncludingVat );
+        self::assertEquals( 100, $priceWithVat->priceExcludingVat );
     }
 
     public function testVatDataVatIncluded()
     {
-        $price = array(
-            'price' => 100,
-            'isVatIncluded' => false
+        $price = new PriceValue(
+            array(
+                'price' => 100,
+                'isVatIncluded' => false
+            )
         );
 
         $vatRate = new VatRate(
@@ -69,9 +74,9 @@ class PriceValueWithVatDataCalculatorTest extends PHPUnit_Framework_TestCase
             $vatRate
         );
 
-        self::assertEquals( false, $priceWithVat['isVatIncluded'] );
-        self::assertEquals( 100, $priceWithVat['price'] );
-        self::assertEquals( 120.6, $priceWithVat['priceIncludingVat'] );
-        self::assertEquals( 100, $priceWithVat['priceExcludingVat'] );
+        self::assertEquals( false, $priceWithVat->isVatIncluded );
+        self::assertEquals( 100, $priceWithVat->price );
+        self::assertEquals( 120.6, $priceWithVat->priceIncludingVat );
+        self::assertEquals( 100, $priceWithVat->priceExcludingVat );
     }
 }

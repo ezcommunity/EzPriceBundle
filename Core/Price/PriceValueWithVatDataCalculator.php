@@ -18,22 +18,35 @@ use EzSystems\EzPriceBundle\API\Price\PriceValueWithVatDataCalculator as PriceVa
  */
 class PriceValueWithVatDataCalculator implements PriceValueWithVatDataCalculatorInterface
 {
-    public function getValueWithVatData( array $price, VatRate $vatRate )
+    /**
+     * Returns an object adding the price with and without Vat applied
+     *
+     * @param \EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\Value $price
+     * @param VatRate $vatRate
+     *
+     * @return \EzSystems\EzPriceBundle\API\Price\Values\PriceWithVatData
+     */
+    public function getValueWithVatData( PriceValue $price, VatRate $vatRate )
     {
-        $priceWithVatInfo = $price;
+        $priceWithVatInfo = array(
+            'price' => $price->price,
+            'isVatIncluded' => $price->isVatIncluded
+        );
 
         $vatRatio = 1 + ( $vatRate->percentage / 100 );
-        if ( $price['isVatIncluded'] )
+        if ( $price->isVatIncluded )
         {
-            $priceWithVatInfo['priceIncludingVat'] = $price['price'];
-            $priceWithVatInfo['priceExcludingVat'] = $price['price'] / $vatRatio;
+            $priceWithVatInfo['priceIncludingVat'] = $price->price;
+            $priceWithVatInfo['priceExcludingVat'] = $price->price / $vatRatio;
         }
         else
         {
-            $priceWithVatInfo['priceExcludingVat'] = $price['price'];
-            $priceWithVatInfo['priceIncludingVat'] = $price['price'] * $vatRatio;
+            $priceWithVatInfo['priceExcludingVat'] = $price->price;
+            $priceWithVatInfo['priceIncludingVat'] = $price->price * $vatRatio;
         }
 
-        return $priceWithVatInfo;
+        $priceWithVatInfo['vatRate'] = $vatRate->percentage;
+
+        return new PriceWithVatData( $priceWithVatInfo );
     }
 }
