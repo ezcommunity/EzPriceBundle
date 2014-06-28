@@ -8,8 +8,6 @@
 
 namespace EzSystems\EzPriceBundle\API\Price;
 
-use EzSystems\EzPriceBundle\API\Price\Values\VatRate;
-
 interface VatService
 {
     /**

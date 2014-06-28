@@ -55,8 +55,9 @@ class PriceExtension extends Twig_Extension
     }
 
     /**
-     * Returns the price associated to the Field $price without VAT applied
+     * Returns the price associated to the Field $price and Version $versionNo without VAT applied
      *
+     * @param \eZ\Publish\API\Repository\Values\Content\VersionInfo $versionInfo
      * @param \eZ\Publish\API\Repository\Values\Content\Field $price
      *
      * @return string
