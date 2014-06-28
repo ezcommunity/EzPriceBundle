@@ -118,7 +118,7 @@ class Type extends FieldType
      */
     protected function getSortInfo( BaseValue $value )
     {
-        $intPrice = (int)($value->price * 100.00);
+        $intPrice = (int)( $value->price * 100.00 );
         return $intPrice;
     }
 
@@ -162,23 +162,5 @@ class Type extends FieldType
     public function isSearchable()
     {
         return true;
-    }
-
-    /**
-     * Converts a persistence $fieldValue to a Value
-     *
-     * This method builds a field type value from the $data and $externalData properties.
-     *
-     * @param \eZ\Publish\SPI\Persistence\Content\FieldValue $fieldValue
-     *
-     * @return \eZ\Publish\Core\FieldType\Price\Value
-     */
-    public function fromPersistenceValue( FieldValue $fieldValue )
-    {
-        if ( isset( $fieldValue->data['price'] ) && $fieldValue->data['price'] != null )
-        {
-            $isVatIncluded = isset( $fieldValue->data['is_vat_included'] ) ? (bool)$fieldValue->data['is_vat_included'] : true;
-            return new Value( $fieldValue->data['price'], $isVatIncluded );
-        }
     }
 }
