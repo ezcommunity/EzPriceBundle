@@ -92,6 +92,7 @@ class DoctrineDatabase extends Gateway
      * @param int $vatId
      *
      * @throws \EzSystems\EzPriceBundle\Core\Persistence\Legacy\Price\Gateway\AutomaticVatHandlerException if $vatId eqs -1
+     * @throws \EzSystems\EzPriceBundle\Core\Persistence\Legacy\Price\VatNotFoundException if there is no data for $vatId
      *
      * @return array
      */
