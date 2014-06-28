@@ -37,16 +37,14 @@ class Price implements Converter
 
     public function toFieldValue( StorageFieldValue $value, FieldValue $fieldValue )
     {
-        print 'a1';
         $fieldValue->data = array( 'price' => $value->dataFloat );
 
         if ( strstr( $value->dataText, ',' ) !== false )
         {
-            list( $isVatIncluded ) = explode( ',', $value->dataText );
+            list( $vatTypeId, $isVatIncluded ) = explode( ',', $value->dataText );
             $fieldValue->data['isVatIncluded'] = ( $isVatIncluded == 1 ) ? true : false;
         }
         $fieldValue->sortKey = $value->sortKeyInt;
-        var_dump( $fieldValue );
     }
 
     public function toStorageFieldDefinition( FieldDefinition $fieldDef, StorageFieldDefinition $storageDef )

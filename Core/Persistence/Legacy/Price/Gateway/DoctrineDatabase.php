@@ -82,7 +82,7 @@ class DoctrineDatabase extends Gateway
         if ( $row = $statement->fetch( PDO::FETCH_ASSOC ) )
         {
             $rowVatData = explode( ',', $row['data_text'] );
-            return (int)$rowVatData[1];
+            return (int)$rowVatData[0];
         }
     }
 
