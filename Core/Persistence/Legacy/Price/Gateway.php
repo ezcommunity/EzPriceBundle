@@ -11,7 +11,7 @@ namespace EzSystems\EzPriceBundle\Core\Persistence\Legacy\Price;
 abstract class Gateway
 {
     /**
-     * Returns an array with basic tag data
+     * Returns an array with Vat Rate data
      *
      * @param mixed $fieldId
      * @param int $versionNo
