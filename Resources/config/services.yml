@@ -26,6 +26,7 @@ services:
         arguments:
             - @ezprice.api.service.vatservice
             - @ezprice.api.service.pricewithvatcalculator
+            - @?logger
 
     ezprice.api.service.vatservice:
         class: %ezprice.api.service.vatservice.class%

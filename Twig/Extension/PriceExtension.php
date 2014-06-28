@@ -12,21 +12,29 @@ use eZ\Publish\API\Repository\Values\Content\Field;
 use eZ\Publish\API\Repository\Values\Content\VersionInfo;
 use EzSystems\EzPriceBundle\API\Price\PriceValueWithVatDataCalculator;
 use EzSystems\EzPriceBundle\API\Price\VatService;
+use EzSystems\EzPriceBundle\Core\Persistence\Legacy\Price\Gateway\AutomaticVatHandlerException;
+use EzSystems\EzPriceBundle\Core\Persistence\Legacy\Price\VatNotFoundException;
+use Psr\Log\LoggerInterface;
 use Twig_Extension;
 use Twig_SimpleFunction;
 
 class PriceExtension extends Twig_Extension
 {
-    /** @var \EzSystems\EzPriceBundle\API\Price\VatService */
+    /**
+     * @var \EzSystems\EzPriceBundle\API\Price\VatService
+     */
     private $vatService;
 
-    /** @var \EzSystems\EzPriceBundle\API\Price\PriceValueWithVatDataCalculator */
+    /**
+     * @var \EzSystems\EzPriceBundle\API\Price\PriceValueWithVatDataCalculator
+     */
     private $calculator;
 
-    public function __construct( VatService $vatService, PriceValueWithVatDataCalculator $calculator )
+    public function __construct( VatService $vatService, PriceValueWithVatDataCalculator $calculator, LoggerInterface $logger )
     {
         $this->vatService = $vatService;
         $this->calculator = $calculator;
+        $this->logger = $logger;
     }
     /**
      * Returns the name of the extension.
@@ -64,10 +72,26 @@ class PriceExtension extends Twig_Extension
      */
     public function priceValue( VersionInfo $versionInfo, Field $price )
     {
-        return $this->calculator->getValueWithVatData(
-            $price->value,
-            $this->vatService->loadVatRate( $price->id, $versionInfo->versionNo )
-        );
-
+        try
+        {
+            return $this->calculator->getValueWithVatData(
+                $price->value,
+                $this->vatService->loadVatRate( $price->id, $versionInfo->versionNo )
+            );
+        }
+        catch ( AutomaticVatHandlerException $e )
+        {
+            if ( $this->logger )
+            {
+                $this->logger->error( "Automatic VAT Handling is selected for Field {$price->id} and Version {$versionInfo->versionNo} but Automatic Vat Handling is not implemented yet. Showing base price instead." );
+            }
+        }
+        catch ( VatNotFoundException $e )
+        {
+            if ( $this->logger )
+            {
+                $this->logger->error( "Couldn't find Vat info for Field {$price->id} and Version {$versionInfo->versionNo}. Showing base price instead." );
+            }
+        }
     }
 }

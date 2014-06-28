@@ -9,9 +9,9 @@
 namespace EzSystems\EzPriceBundle\Core\Persistence\Legacy\Price\Gateway;
 
 use EzSystems\EzPriceBundle\Core\Persistence\Legacy\Price\Gateway;
-use EzSystems\EzPriceBundle\API\Price\Values\VatRate;
 use eZ\Publish\Core\Persistence\Database\DatabaseHandler;
 use eZ\Publish\Core\Base\Exceptions\NotFoundException;
+use EzSystems\EzPriceBundle\Core\Persistence\Legacy\Price\VatNotFoundException;
 use PDO;
 
 class DoctrineDatabase extends Gateway
@@ -82,7 +82,7 @@ class DoctrineDatabase extends Gateway
         if ( $row = $statement->fetch( PDO::FETCH_ASSOC ) )
         {
             $rowVatData = explode( ',', $row['data_text'] );
-            return (int)$rowVatData[0];
+            return $rowVatData[0];
         }
     }
 
@@ -91,10 +91,15 @@ class DoctrineDatabase extends Gateway
      *
      * @param int $vatId
      *
+     * @throws \EzSystems\EzPriceBundle\Core\Persistence\Legacy\Price\Gateway\AutomaticVatHandlerException if $vatId eqs -1
+     *
      * @return array
      */
     private function getVatRateDataById( $vatId )
     {
+        if ( $vatId == -1 )
+            throw new AutomaticVatHandlerException( 'Automatic Vat Handling is not Implemented' );
+
         $query = $this->handler->createSelectQuery();
         $query
             ->select( array( 'name', 'percentage' ) )
@@ -108,6 +113,11 @@ class DoctrineDatabase extends Gateway
 
         $statement = $query->prepare();
         $statement->execute();
+
+        if ( $statement->rowCount() === 0 )
+        {
+            throw new VatNotFoundException( 'Vat Rate', $vatId );
+        }
 
         return $statement->fetch();
     }
