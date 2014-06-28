@@ -2,6 +2,9 @@
 
 {% block ezprice_field %}
 {% spaceless %}
-    Price: {{ field.value.price }}
+    <pre>{{ dump( field ) }}</pre>
+    {% set price = ezprice_value( versionInfo, field ) %}
+    Price including VAT: {{ price.priceIncludingVat }}<br/>
+    Price excluding VAT: {{ price.priceExcludingVat }}
 {% endspaceless %}
 {% endblock %}

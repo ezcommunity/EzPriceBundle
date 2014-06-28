@@ -15,9 +15,13 @@ use eZ\Publish\API\Repository\Values\ValueObject;
  */
 class VatRate extends ValueObject
 {
-    /** @var float */
+    /**
+     * @var float
+     */
     protected $percentage;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $name;
 }

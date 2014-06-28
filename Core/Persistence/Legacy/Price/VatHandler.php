@@ -10,6 +10,7 @@ namespace EzSystems\EzPriceBundle\Core\Persistence\Legacy\Price;
 
 use EzSystems\EzPriceBundle\SPI\Persistence\Price\VatHandler as VatHandlerInterface;
 use EzSystems\EzPriceBundle\Core\Persistence\Legacy\Price\Gateway;
+use EzSystems\EzPriceBundle\API\Price\Values\VatRate;
 
 class VatHandler implements VatHandlerInterface
 {
@@ -38,6 +39,7 @@ class VatHandler implements VatHandlerInterface
      */
     public function load( $fieldId, $versionNo )
     {
-        return $this->gateway->getVatRateData( $fieldId, $versionNo );
+        $vatRateData = $this->gateway->getVatRateData( $fieldId, $versionNo );
+        return new VatRate( $vatRateData );
     }
 }
