@@ -12,5 +12,17 @@ use EzSystems\EzPriceBundle\SPI\Persistence\Price\VatHandler as VatHandlerInterf
 
 class VatHandler implements VatHandlerInterface
 {
+    /**
+     * Loads a VatRate object from its $vatId
+     *
+     * @throws \eZ\Publish\API\Repository\Exceptions\NotFoundException If the specified vat is not found
+     *
+     * @param mixed $vatId
+     *
+     * @return \EzSystems\EzPriceBundle\API\Price\Values\VatRate
+     */
+    public function load( $vatId )
+    {
 
+    }
 }
