@@ -30,8 +30,10 @@ class VatService implements VatServiceInterface
 
     /**
      * Loads the VAT rate for $fieldId in $versionNo
+     *
      * @param mixed $fieldId
      * @param int $versionNo
+     *
      * @return \EzSystems\EzPriceBundle\API\Price\Values\VatRate
      */
     public function loadVatRate( $fieldId, $versionNo )
