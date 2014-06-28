@@ -45,5 +45,70 @@ class DoctrineDatabase extends Gateway
      */
     public function getVatRateData( $fieldId, $versionNo )
     {
+        $vatId = $this->findVatId( $fieldId, $versionNo );
+        return $this->getVatRateDataById( $vatId );
+    }
+
+    /**
+     * Gets the id of the vat rate associated with Field id $fieldId and version number $versionNo
+     *
+     * @param $fieldId
+     * @param $versionNo
+     *
+     * @return int;
+     */
+    private function findVatId( $fieldId, $versionNo )
+    {
+        $query = $this->handler->createSelectQuery();
+        $query
+            ->select( 'data_text' )
+            ->from( $this->handler->quoteTable( 'ezcontentobject_attribute' ) )
+            ->where(
+                $query->expr->lAnd(
+                    $query->expr->eq(
+                        $this->handler->quoteColumn( 'id' ),
+                        $query->bindValue( $fieldId, null, PDO::PARAM_INT )
+                    ),
+                    $query->expr->eq(
+                        $this->handler->quoteColumn( 'version' ),
+                        $query->bindValue( $versionNo, null, PDO::PARAM_INT )
+                    )
+                )
+            );
+
+        $statement = $query->prepare();
+        $statement->execute();
+
+        if ( $row = $statement->fetch( PDO::FETCH_ASSOC ) )
+        {
+            $rowVatData = explode( ',', $row['data_text'] );
+            return (int)$rowVatData[1];
+        }
+    }
+
+    /**
+     * Queries database to get data of the Vat Rate
+     *
+     * @param int $vatId
+     *
+     * @return array
+     */
+    private function getVatRateDataById( $vatId )
+    {
+        $query = $this->handler->createSelectQuery();
+        $query
+            ->select( array( 'name', 'percentage' ) )
+            ->from( $this->handler->quoteTable( 'ezvattype' ) )
+            ->where(
+                $query->expr->eq(
+                    $this->handler->quoteColumn( 'id' ),
+                    $query->bindValue( $vatId, null, PDO::PARAM_INT )
+                )
+            );
+
+        $statement = $query->prepare();
+        $statement->execute();
+
+        return $statement->fetch();
     }
 }

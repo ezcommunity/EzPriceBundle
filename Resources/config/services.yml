@@ -2,6 +2,10 @@ parameters:
     ezprice.fieldType.ezprice.class: EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\Type
     ezprice.fieldType.ezprice.converter.class: EzSystems\EzPriceBundle\eZ\Publish\Core\Persistence\Legacy\Content\FieldValue\Converter\Price
     ezprice.twig.extension.class: EzSystems\EzPriceBundle\Twig\Extension\PriceExtension
+    ezprice.api.service.vatservice.class: EzSystems\EzPriceBundle\Core\Price\VatService
+    ezprice.api.service.pricewithvatcalculator.class: EzSystems\EzPriceBundle\Core\Price\PriceValueWithVatDataCalculator
+    ezprice.api.storage_engine.legacy.handler.ezprice.factory.class: EzSystems\EzPriceBundle\ApiLoader\LegacyVatHandlerFactory
+    ezprice.api.storage_engine.legacy.handler.ezprice.class: EzSystems\EzPriceBundle\Core\Persistence\Legacy\Price\VatHandler
 
 services:
     ezprice.fieldType.ezprice.class:
@@ -16,6 +20,29 @@ services:
             - {name: ezpublish.storageEngine.legacy.converter, alias: ezprice, lazy: true, callback: '::create'}
 
     ezprice.twig.extension:
-         class: %ezprice.twig.extension.class%
-         tags:
-             - { name: twig.extension }
+        class: %ezprice.twig.extension.class%
+        tags:
+            - { name: twig.extension }
+        arguments:
+            - @ezprice.api.service.vatservice
+            - @ezprice.api.service.pricewithvatcalculator
+
+    ezprice.api.service.vatservice:
+        class: %ezprice.api.service.vatservice.class%
+        arguments:
+            - @ezprice.api.storage_engine.legacy.handler.ezprice
+
+    ezprice.api.service.pricewithvatcalculator:
+        class: %ezprice.api.service.pricewithvatcalculator.class%
+
+    ezprice.api.storage_engine.legacy.handler.ezprice.factory:
+        class: %ezprice.api.storage_engine.legacy.handler.ezprice.factory.class%
+        arguments:
+            - @service_container
+
+    ezprice.api.storage_engine.legacy.handler.ezprice:
+        class: %ezprice.api.storage_engine.legacy.handler.ezprice.class%
+        factory_service: ezprice.api.storage_engine.legacy.handler.ezprice.factory
+        factory_method: buildLegacyVatHandler
+        arguments:
+            - @ezpublish.api.storage_engine.legacy.dbhandler
