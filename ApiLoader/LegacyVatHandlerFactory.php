@@ -10,7 +10,6 @@ namespace EzSystems\EzPriceBundle\ApiLoader;
 
 use eZ\Publish\Core\Persistence\Database\DatabaseHandler;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-
 use EzSystems\EzPriceBundle\Core\Persistence\Legacy\Price\Gateway\DoctrineDatabase;
 
 class LegacyVatHandlerFactory
@@ -39,8 +38,8 @@ class LegacyVatHandlerFactory
      */
     public function buildLegacyVatHandler( DatabaseHandler $dbHandler )
     {
-        $legacyTagsHandlerClass = $this->container->getParameter( "ezprice.api.storage_engine.legacy.handler.ezprice.class" );
-        return new $legacyTagsHandlerClass(
+        $legacyVatHandlerClass = $this->container->getParameter( "ezprice.api.storage_engine.legacy.handler.ezprice.class" );
+        return new $legacyVatHandlerClass(
             new DoctrineDatabase( $dbHandler )
         );
     }
