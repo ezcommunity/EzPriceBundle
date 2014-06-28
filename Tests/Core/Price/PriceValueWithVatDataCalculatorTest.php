@@ -12,6 +12,7 @@ use EzSystems\EzPriceBundle\API\Price\Values\PriceWithVatData;
 use EzSystems\EzPriceBundle\API\Price\Values\VatRate;
 use EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\Value as PriceValue;
 use EzSystems\EzPriceBundle\Core\Price\PriceValueWithVatDataCalculator;
+use EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\Value as PriceValue;
 use PHPUnit_Framework_TestCase;
 
 /**
