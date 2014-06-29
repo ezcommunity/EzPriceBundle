@@ -41,8 +41,8 @@ class Price implements Converter
 
         if ( strstr( $value->dataText, ',' ) !== false )
         {
-            list( $isVatIncluded ) = explode( ',', $value->dataText );
-            $fieldValue->data['isVatIncluded'] = (bool)$isVatIncluded;
+            list( $vatTypeId, $isVatIncluded ) = explode( ',', $value->dataText );
+            $fieldValue->data['isVatIncluded'] = ( $isVatIncluded == 1 ) ? true : false;
         }
         $fieldValue->sortKey = $value->sortKeyInt;
     }
