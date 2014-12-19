@@ -19,6 +19,12 @@ class Value extends BaseValue
     public $price;
 
     /**
+     * The id of the vat rate
+     * @var int
+     */
+    public $vatRateId;
+
+    /**
      * If VAT is, or not, included in $price {@link $isVatincluded}
      * @var bool
      */
@@ -26,9 +32,10 @@ class Value extends BaseValue
 
     /**
      * @param float|array $price Either the price as a float, or an array of properties (price, isVatIncluded)
+     * @param int $vatRateId
      * @param bool $isVatIncluded
      */
-    public function __construct( $price = null, $isVatIncluded = true )
+    public function __construct( $price = null, $vatRateId = null, $isVatIncluded = true )
     {
         if ( is_array( $price ) )
         {
@@ -37,6 +44,7 @@ class Value extends BaseValue
         else
         {
             $this->price = $price;
+            $this->vatRateId = $vatRateId;
             $this->isVatIncluded = $isVatIncluded;
         }
     }

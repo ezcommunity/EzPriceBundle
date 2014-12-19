@@ -93,11 +93,11 @@ class PriceTest extends FieldTypeTest
             ),
             array(
                 new PriceValue( 23.42 ),
-                array( 'price' => 23.42, 'isVatIncluded' => true ),
+                array( 'price' => 23.42, 'vatRateId' => null, 'isVatIncluded' => true ),
             ),
             array(
-                new PriceValue( 23.42, false ),
-                array( 'price' => 23.42, 'isVatIncluded' => false ),
+                new PriceValue( 23.42, 1, false ),
+                array( 'price' => 23.42, 'vatRateId' => 1, 'isVatIncluded' => false ),
             ),
         );
     }
@@ -114,16 +114,16 @@ class PriceTest extends FieldTypeTest
                 new PriceValue( 23.42 ),
             ),
             array(
-                array( 'price' => 23.42, 'isVatIncluded' => false ),
-                new PriceValue( 23.42, false ),
+                array( 'price' => 23.42, 'vatRateId' => 1, 'isVatIncluded' => false ),
+                new PriceValue( 23.42, 1, false ),
             ),
             array(
-                array( 'price' => 23.42, 'isVatIncluded' => true ),
-                new PriceValue( 23.42, true ),
+                array( 'price' => 23.42, 'vatRateId' => 2, 'isVatIncluded' => true ),
+                new PriceValue( 23.42, 2, true ),
             ),
             array(
-                array( 'price' => 23.42, 'isVatIncluded' => true ),
-                new PriceValue( 23.42, true ),
+                array( 'price' => 23.42, 'vatRateId' => 1, 'isVatIncluded' => true ),
+                new PriceValue( 23.42, 1, true ),
             ),
         );
     }
