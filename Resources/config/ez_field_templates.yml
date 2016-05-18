@@ -2,3 +2,4 @@ system:
     default:
         field_templates:
             - {template: EzPriceBundle:fields:ezprice.html.twig, priority: 10}
+            - {template: EzPriceBundle:fields:ezmultiprice.html.twig, priority: 10}            

@@ -25,7 +25,7 @@ class PriceValueWithVatDataCalculator implements PriceValueWithVatDataCalculator
      *
      * @return \EzSystems\EzPriceBundle\API\Price\Values\PriceWithVatData
      */
-    public function getValueWithVatData( PriceValue $price, VatRate $vatRate )
+    public function getValueWithVatData(PriceValue $price, VatRate $vatRate)
     {
         $priceWithVatInfo = array(
             'price' => $price->price,

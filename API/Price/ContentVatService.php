@@ -18,5 +18,5 @@ interface ContentVatService
      *
      * @return \EzSystems\EzPriceBundle\API\Price\Values\VatRate
      */
-    public function loadVatRateForField( $fieldId, $versionNo );
+    public function loadVatRateForField($fieldId, $versionNo);
 }

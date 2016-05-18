@@ -28,7 +28,7 @@ class ContentVatService implements ContentVatServiceInterface
      * @param \EzSystems\EzPriceBundle\SPI\Persistence\Price\ContentVatHandler $contentVatHandler
      * @param \EzSystems\EzPriceBundle\API\Price\VatService $vatService;
      */
-    public function __construct( ContentVatHandler $contentVatHandler, VatService $vatService )
+    public function __construct(ContentVatHandler $contentVatHandler, VatService $vatService)
     {
         $this->contentVatHandler = $contentVatHandler;
         $this->vatService = $vatService;
@@ -42,10 +42,10 @@ class ContentVatService implements ContentVatServiceInterface
      *
      * @return \EzSystems\EzPriceBundle\API\Price\Values\VatRate
      */
-    public function loadVatRateForField( $fieldId, $versionNo )
+    public function loadVatRateForField($fieldId, $versionNo)
     {
         return $this->vatService->loadVatRate(
-            $this->contentVatHandler->getVatRateIdForField( $fieldId, $versionNo )
+            $this->contentVatHandler->getVatRateIdForField($fieldId, $versionNo)
         );
     }
 }

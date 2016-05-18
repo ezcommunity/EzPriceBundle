@@ -23,17 +23,19 @@ use Symfony\Component\Config\Resource\FileResource;
  */
 class EzPriceExtension extends Extension implements PrependExtensionInterface
 {
-    public function prepend( ContainerBuilder $container )
+    public function prepend(ContainerBuilder $container)
     {
         $configFile = __DIR__ . '/../Resources/config/ez_field_templates.yml';
-        $config = Yaml::parse( file_get_contents( $configFile ) );
-        $container->prependExtensionConfig( 'ezpublish', $config );
-        $container->addResource( new FileResource( $configFile ) );
+        $config = Yaml::parse(file_get_contents($configFile));
+        $container->prependExtensionConfig('ezpublish', $config);
+        $container->addResource(new FileResource($configFile));
     }
 
-    public function load( array $configs, ContainerBuilder $container )
+    public function load(array $configs, ContainerBuilder $container)
     {
-        $loader = new Loader\YamlFileLoader( $container, new FileLocator( __DIR__ . '/../Resources/config' ) );
-        $loader->load( 'services.yml' );
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('services.yml');
+        $loader->load('fieldtype_external_storage.yml');
+        $loader->load('external_storage_gateways.yml');
     }
 }

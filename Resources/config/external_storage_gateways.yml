@@ -1,0 +1,7 @@
+parameters:
+    ezpublish.fieldType.ezmultiprice.storage_gateway.class: EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\MultiPrice\MultiPriceStorage\Gateway\LegacyStorage
+services:
+    ezpublish.fieldType.ezmultiprice.storage_gateway:
+        class: %ezpublish.fieldType.ezmultiprice.storage_gateway.class%
+        tags:
+            - {name: ezpublish.fieldType.externalStorageHandler.gateway, alias: ezmultiprice, identifier: LegacyStorage}

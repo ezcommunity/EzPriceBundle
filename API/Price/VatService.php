@@ -19,5 +19,5 @@ interface VatService
      *
      * @return \EzSystems\EzPriceBundle\API\Price\Values\VatRate
      */
-    public function loadVatRate( $vatRateId );
+    public function loadVatRate($vatRateId);
 }

@@ -1,0 +1,8 @@
+parameters:
+    ezpublish.fieldType.ezmultiprice.externalStorage.class: EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\MultiPrice\MultiPriceStorage
+
+services:
+    ezpublish.fieldType.ezmultiprice.externalStorage:
+        class: %ezpublish.fieldType.ezmultiprice.externalStorage.class%
+        tags:
+            - {name: ezpublish.fieldType.externalStorageHandler, alias: ezmultiprice}

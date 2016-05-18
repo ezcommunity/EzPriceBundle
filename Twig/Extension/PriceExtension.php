@@ -24,12 +24,19 @@ class PriceExtension extends Twig_Extension
     /**
      * @var \EzSystems\EzPriceBundle\API\Price\ContentVatService
      */
-    private $contentVatService;
+    protected $contentVatService;
 
     /**
      * @var \EzSystems\EzPriceBundle\API\Price\PriceValueWithVatDataCalculator
      */
-    private $calculator;
+    protected $calculator;
+
+    /**
+     * This property might not be set in the construct!
+     * 
+     * @var LoggerInterface
+     */
+    protected $logger;
 
     public function __construct(
         ContentVatService $contentVatService,
@@ -76,13 +83,16 @@ class PriceExtension extends Twig_Extension
      *
      * @return string
      */
-    public function priceValue( VersionInfo $versionInfo, Field $price )
+    public function priceValue(VersionInfo $versionInfo, Field $price)
     {
         try
         {
             return $this->calculator->getValueWithVatData(
                 $price->value,
-                $this->contentVatService->loadVatRateForField( $price->id, $versionInfo->versionNo )
+                $this->contentVatService->loadVatRateForField(
+                    $price->id, 
+                    $versionInfo->versionNo
+                )
             );
         }
         catch ( VatIdentifierNotFoundException $e )
