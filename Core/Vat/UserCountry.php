@@ -3,7 +3,7 @@
 namespace EzSystems\EzPriceBundle\Core\Vat;
 
 use EzSystems\EzPriceBundle\API\Vat\UserCountry as UserCountryInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Service used to find out what the users current country is.
@@ -11,11 +11,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class UserCountry implements UserCountryInterface
 {
     /**
-     * Symfony Request stack, used to get session information
+     * Session
      * 
-     * @var RequestStack
+     * @var Session
      */
-    protected $requestStack;
+    protected $session;
 
     /**
      * The country that we should default to if the users country cannot
@@ -35,17 +35,17 @@ class UserCountry implements UserCountryInterface
     /**
      * __construct
      * 
-     * @param RequestStack $requestStack               
+     * @param Session $session               
      * @param string       $defaultUserCountry         
      * @param string       $countrySessionVariableName 
      */
     public function __construct(
-        RequestStack $requestStack, 
+        Session $session, 
         $defaultUserCountry,
         $countrySessionVariableName = "UserPreferredCountry"
     )
     {
-        $this->requestStack = $requestStack;
+        $this->session = $session;
         $this->defaultUserCountry = $defaultUserCountry;
         $this->countrySessionVariableName = $countrySessionVariableName;
     }
@@ -58,12 +58,10 @@ class UserCountry implements UserCountryInterface
      */
     public function fetchUsersCountry()
     {
-        $masterRequest = $this->requestStack->getMasterRequest();
-        $session = $masterRequest->getSession();
 
-        if ($session->has($this->countrySessionVariableName)) {
+        if ($this->session->has($this->countrySessionVariableName)) {
             // Fetch the users country from their session
-            return $session->get($this->countrySessionVariableName);
+            return $this->session->get($this->countrySessionVariableName);
         } else {
             // Get default user country
             return $this->defaultUserCountry;

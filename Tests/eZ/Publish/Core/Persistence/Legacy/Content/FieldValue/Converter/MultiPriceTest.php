@@ -10,7 +10,7 @@ namespace EzSystems\EzPriceBundle\Tests\eZ\Publish\Core\Persistence\Legacy\Conte
 
 use eZ\Publish\SPI\Persistence\Content\FieldValue;
 use eZ\Publish\Core\Persistence\Legacy\Content\StorageFieldValue;
-use EzSystems\EzPriceBundle\eZ\Publish\Core\Persistence\Legacy\Content\FieldValue\Converter\Price as PriceConverter;
+use EzSystems\EzPriceBundle\eZ\Publish\Core\Persistence\Legacy\Content\FieldValue\Converter\MultiPrice as MultiPriceConverter;
 use PHPUnit_Framework_TestCase;
 use DOMDocument;
 
@@ -20,32 +20,32 @@ use DOMDocument;
  * @group fieldType
  * @group ezprice
  */
-class PriceTest extends PHPUnit_Framework_TestCase
+class MultiPriceTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var \EzSystems\EzPriceBundle\eZ\Publish\Core\Persistence\Legacy\Content\FieldValue\Converter\Price
+     * @var \EzSystems\EzPriceBundle\eZ\Publish\Core\Persistence\Legacy\Content\FieldValue\Converter\MultiPrice
      */
     protected $converter;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->converter = new PriceConverter;
+        $this->converter = new MultiPriceConverter;
     }
 
     /**
-     * @covers \eZ\Publish\Core\Persistence\Legacy\Content\FieldValue\Converter\Price::toStorageValue
+     * @covers \eZ\Publish\Core\Persistence\Legacy\Content\FieldValue\Converter\MultiPrice::toStorageValue
      */
     public function testToStorageValue()
     {
-        $price = 3.1415;
+        $vatRateId = 1;
         $isVatIncluded = 1;
 
         $fieldValue = new FieldValue(
             array(
                 'data' => array(
-                    'price' => $price,
-                    'isVatIncluded' => $isVatIncluded
+                    'isVatIncluded' => $isVatIncluded,
+                    'vatRateId' => $vatRateId
                 )
             )
         );
@@ -54,22 +54,20 @@ class PriceTest extends PHPUnit_Framework_TestCase
 
         $this->converter->toStorageValue( $fieldValue, $storageFieldValue );
 
-        self::assertEquals( $price, $storageFieldValue->dataFloat );
         self::assertEquals( "1,1", $storageFieldValue->dataText );
     }
 
     /**
-     * @covers \eZ\Publish\Core\Persistence\Legacy\Content\FieldValue\Converter\Price::toFieldValue
+     * @covers \eZ\Publish\Core\Persistence\Legacy\Content\FieldValue\Converter\MultiPrice::toFieldValue
      */
     public function testToFieldValue()
     {
+        $vatRateId = 2;
         $isVatIncluded = 1;
-        $price = 3.1415;
 
         $storageFieldValue = new StorageFieldValue(
             array(
-                'dataFloat' => $price,
-                'dataText' => "$isVatIncluded,1"
+                'dataText' => "$vatRateId,$isVatIncluded"
             )
         );
 
@@ -77,7 +75,7 @@ class PriceTest extends PHPUnit_Framework_TestCase
 
         $this->converter->toFieldValue( $storageFieldValue, $fieldValue );
 
-        self::assertEquals( $price, $fieldValue->data['price'] );
+        self::assertEquals( $vatRateId, $fieldValue->data['vatRateId'] );
         self::assertEquals( $isVatIncluded, $fieldValue->data['isVatIncluded'] );
     }
 }

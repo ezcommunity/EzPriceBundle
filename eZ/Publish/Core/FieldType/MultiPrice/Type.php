@@ -12,6 +12,7 @@
 
 namespace EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\MultiPrice;
 
+use EzSystems\EzPriceBundle\API\MultiPrice\Values\Price as PriceValueObject;
 use eZ\Publish\Core\Base\Exceptions\InvalidArgumentType;
 use eZ\Publish\Core\FieldType\FieldType;
 use eZ\Publish\Core\FieldType\Value as BaseValue;
@@ -36,21 +37,24 @@ class Type extends FieldType
      * It will be used to generate content name and url alias if current field is designated
      * to be used in the content name/urlAlias pattern.
      *
-     * @param \EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\Value $value
+     * @param \EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\MultiPrice\Value $value
      *
      * @return string
      */
     public function getName( SPIValue $value )
     {
+        if (count($value->prices) == 0) {
+            return "";
+        }
         $firstPrice = array_slice($value->prices, 0, 1);
-        return $firstPrice->value;
+        return $firstPrice[0]->value;
     }
 
     /**
      * Returns the fallback default value of field type when no such default
      * value is provided in the field definition in content types.
      *
-     * @return \EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\Value
+     * @return \EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\MultiPrice\Value
      */
     public function getEmptyValue()
     {
@@ -78,14 +82,14 @@ class Type extends FieldType
      * 
      * @return \EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\MultiPrice\Value The potentially converted and structurally plausible value.
      */
-    protected function createValueFromInput( $inputValue )
+    protected function createValueFromInput($inputValue)
     {
-        if (!$inputValue instanceof Value) {
-            throw new InvalidArgumentException(
-                '$inputValue',
-                'EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\MultiPrice\Value',
-                $inputValue
-            );
+        if ($inputValue instanceof Value) {
+            return $inputValue;
+        } elseif (is_array($inputValue) && array_key_exists('prices', $inputValue)) {
+            $inputValue['vatTypeId'] = array_key_exists('vatTypeId', $inputValue) ? $inputValue['vatTypeId'] : null;
+            $inputValue['isVatIncluded'] = array_key_exists('isVatIncluded', $inputValue) ? $inputValue['isVatIncluded'] : true;
+            return new Value($inputValue['prices'], $inputValue['vatTypeId'], $inputValue['isVatIncluded']);
         }
         return $inputValue;
     }
@@ -95,28 +99,45 @@ class Type extends FieldType
      *
      * @throws \eZ\Publish\API\Repository\Exceptions\InvalidArgumentException If the value does not match the expected structure.
      *
-     * @param \EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\Value $value
+     * @param \EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\MultiPrice\Value $value
      *
      * @return void
      */
-    protected function checkValueStructure( BaseValue $value )
+    protected function checkValueStructure(BaseValue $value)
     {
+        
+        if (!is_array($value->prices)) {
+            throw new InvalidArgumentType(
+                    '$value->prices',
+                    'array',
+                    $value->prices
+                );
+        }
+
         // Validate prices are all floats.
         foreach ($value->prices as $currency => $price) {
-            if (!is_float($price->value)) {
+            if (!$price instanceof PriceValueObject) {
+                throw new InvalidArgumentType(
+                    '$value->prices[\'' . $currency . '\']',
+                    '\EzSystems\EzPriceBundle\API\MultiPrice\Values\Price',
+                    $price
+                );
+
+            } elseif (!is_float($price->value) && !is_int($price->value)) {
                 throw new InvalidArgumentType(
                     '$value->prices[\'' . $currency . '\']->value',
-                    'float',
+                    'float|int',
                     $price->value
                 );
+
             }
         }
-        // Validate vatRateId, should not be null
-        if ($value->vatRateId === null) {
+        // Validate vatTypeId, should not be null
+        if ($value->vatTypeId === null) {
             throw new InvalidArgumentType(
-                '$value->vatRateId',
+                '$value->vatTypeId',
                 'not null',
-                $value->vatRateId
+                $value->vatTypeId
             );
         }
         // Validate isVatIncluded, should not be null
@@ -139,7 +160,7 @@ class Type extends FieldType
     protected function getSortInfo( BaseValue $value )
     {
         $firstPrice = array_slice($value->prices, 0, 1);
-        return (int)( $firstPrice->value * 100.00 );
+        return (int)($firstPrice->value * 100.00);
     }
 
     /**
@@ -147,22 +168,27 @@ class Type extends FieldType
      *
      * @param mixed $hash
      *
-     * @return \EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\Value $value
+     * @return \EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\MultiPrice\Value $value
      */
-    public function fromHash( $hash )
+    public function fromHash($hash)
     {
-        if ( $hash === null )
+        if ($hash === null || !array_key_exists('prices', $hash))
         {
             return $this->getEmptyValue();
         }
+        foreach ($hash['prices'] as $currency => $price) {
+            $hash['prices'][$currency] = new PriceValueObject($price);
+        }
+        $hash['vatTypeId'] = array_key_exists('vatTypeId', $hash) ? $hash['vatTypeId'] : null;
+        $hash['isVatIncluded'] = array_key_exists('isVatIncluded', $hash) ? $hash['isVatIncluded'] : true;
 
-        return new Value( $hash );
+        return new Value($hash['prices'], $hash['vatTypeId'], $hash['isVatIncluded']);
     }
 
     /**
      * Converts a $Value to a hash
      *
-     * @param \EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\Price\Value $value
+     * @param \EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\MultiPrice\Value $value
      *
      * @return mixed
      */
@@ -172,7 +198,9 @@ class Type extends FieldType
         {
             return null;
         }
-
+        foreach ($value->prices as $currency => $price) {
+            $value->prices[$currency] = (array)$price;
+        }
         return (array)$value;
     }
 

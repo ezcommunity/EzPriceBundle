@@ -15,7 +15,7 @@ namespace EzSystems\EzPriceBundle\Core\MultiPrice;
 use EzSystems\EzPriceBundle\API\MultiPrice\CurrencyService as CurrencyServiceInterface;
 use EzSystems\EzPriceBundle\API\MultiPrice\Values\Currency;
 use EzSystems\EzPriceBundle\SPI\Persistence\MultiPrice\CurrencyHandler;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Service used to fetch the currency for the current user.
@@ -23,11 +23,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class CurrencyService implements CurrencyServiceInterface
 {
     /**
-     * The request stack, used to retrive session information
+     * The users current session
      * 
-     * @var RequestStack
+     * @var Session
      */
-    protected $requestStack;
+    protected $session;
 
     /**
      * Currency handler, used to retrive a currency object
@@ -53,19 +53,19 @@ class CurrencyService implements CurrencyServiceInterface
     /**
      * __construct 
      * 
-     * @param RequestStack    $requestStack                
+     * @param Session    $session
      * @param CurrencyHandler $currencyHandler             
      * @param string          $defaultUserCurrency 3 character code for the currency
      * @param string          $currencySessionVariableName defaults to UserPreferredCurrency
      */
     public function __construct(
-        RequestStack $requestStack,
+        Session $session,
         CurrencyHandler $currencyHandler,
         $defaultUserCurrency,
         $currencySessionVariableName = "UserPreferredCurrency"
     )
     {
-        $this->requestStack = $requestStack;
+        $this->session = $session;
         $this->currencyHandler = $currencyHandler;
         $this->defaultUserCurrency = $defaultUserCurrency;
         $this->currencySessionVariableName = $currencySessionVariableName;
@@ -78,12 +78,9 @@ class CurrencyService implements CurrencyServiceInterface
      */
     public function getUsersCurrencyCode()
     {
-        $masterRequest = $this->requestStack->getMasterRequest();
-        $session = $masterRequest->getSession();
-
-        if ($session->has($this->currencySessionVariableName)) {
+        if ($this->session->has($this->currencySessionVariableName)) {
             // Fetch the users currency from their session
-            return $session->get($this->currencySessionVariableName);
+            return $this->session->get($this->currencySessionVariableName);
         } else {
             // Get default user country
             return $this->defaultUserCurrency;

@@ -42,7 +42,7 @@ class Value extends BaseValue
      * @param int $vatTypeId The Id of the vat type that should be used.
      * @param boolean $isVatIncluded Whether vat is included or excluded from the base price.
      */
-    public function __construct($prices, $vatTypeId, $isVatIncluded = true)
+    public function __construct($prices = array(), $vatTypeId = null, $isVatIncluded = true)
     {
         $this->prices = $prices;
         $this->vatTypeId = $vatTypeId;

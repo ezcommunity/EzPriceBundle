@@ -31,38 +31,6 @@ class PriceValueWithVatDataCalculatorTest extends PHPUnit_Framework_TestCase
     {
         $price = new PriceValue(
             array(
-                'price' => 120.6,
-                'isVatIncluded' => true
-            )
-        );
-
-        $vatRate = new VatRate(
-            array(
-                'percentage' => 20.6,
-                'name' => 'test'
-            )
-        );
-
-        $priceWithVat = $this->calculator->getValueWithVatData( $price, $vatRate );
-
-        self::assertEquals(
-            new PriceWithVatData(
-                array(
-                    'isVatIncluded' => true,
-                    'price' => 120.6,
-                    'priceIncludingVat' => 120.6,
-                    'priceExcludingVat' => 100.0,
-                    'vatRate' => 20.6
-                )
-            ),
-            $priceWithVat
-        );
-    }
-
-    public function testVatDataVatIncluded()
-    {
-        $price = new PriceValue(
-            array(
                 'price' => 100,
                 'isVatIncluded' => false
             )
@@ -88,6 +56,39 @@ class PriceValueWithVatDataCalculatorTest extends PHPUnit_Framework_TestCase
                     'priceIncludingVat' => 120.6,
                     'priceExcludingVat' => 100.0,
                     'vatRate'=> 20.6
+                )
+            ),
+            $priceWithVat
+        );
+    }
+
+    public function testVatDataVatIncluded()
+    {
+
+        $price = new PriceValue(
+            array(
+                'price' => 120.6,
+                'isVatIncluded' => true
+            )
+        );
+
+        $vatRate = new VatRate(
+            array(
+                'percentage' => 20.6,
+                'name' => 'test'
+            )
+        );
+
+        $priceWithVat = $this->calculator->getValueWithVatData( $price, $vatRate );
+
+        self::assertEquals(
+            new PriceWithVatData(
+                array(
+                    'isVatIncluded' => true,
+                    'price' => 120.6,
+                    'priceIncludingVat' => 120.6,
+                    'priceExcludingVat' => 100.0,
+                    'vatRate' => 20.6
                 )
             ),
             $priceWithVat

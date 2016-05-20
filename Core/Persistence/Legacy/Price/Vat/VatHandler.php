@@ -22,6 +22,7 @@ class VatHandler implements VatHandlerInterface
 
     /**
      * The dynamic vat handler
+     * 
      * @var DynamicVatHandler|null
      */
     protected $dynamicVatHandler;

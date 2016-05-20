@@ -30,6 +30,7 @@ class CurrencyHandler implements CurrencyHandlerInterface
 
     /**
      * __construct 
+     * 
      * @param Gateway $gateway 
      */
     public function __construct(Gateway $gateway)

@@ -1,0 +1,62 @@
+--TEST--
+"ezmultiprice_value" function
+--TEMPLATE--
+{% set price = ezmultiprice_value( versionInfo, field ) %}
+Price including VAT: {{ price.priceIncludingVat|number_format(2) }}
+Price excluding VAT: {{ price.priceExcludingVat|number_format(2) }}
+--DATA--
+return array(
+    'field' => $this->createField(
+        array(
+            "GBP" => $this->createPrice(11, "GBP", 1),
+            "EUR" => $this->createPrice(11, "EUR", 1)
+        ),
+        0
+    ),
+    'versionInfo' => $this->createVersionInfo()
+)
+--EXPECT--
+Price including VAT: 12.10
+Price excluding VAT: 11.00
+--DATA--
+return array(
+    'field' => $this->createField(
+        array(
+            "GBP" => $this->createPrice(11, "GBP", 1),
+            "EUR" => $this->createPrice(11, "EUR", 1)
+        ),
+        1
+    ),
+    'versionInfo' => $this->createVersionInfo()
+)
+--EXPECT--
+Price including VAT: 11.00
+Price excluding VAT: 10.00
+--DATA--
+return array(
+    'field' => $this->createField(
+        array(
+            "GBP" => $this->createPrice(120, "GBP", 1),
+            "EUR" => $this->createPrice(120, "EUR", 1)
+        ),
+        0
+    ),
+    'versionInfo' => $this->createVersionInfo()
+)
+--EXPECT--
+Price including VAT: 132.00
+Price excluding VAT: 120.00
+--DATA--
+return array(
+    'field' => $this->createField(
+        array(
+            "GBP" => $this->createPrice(120, "GBP", 1),
+            "EUR" => $this->createPrice(120, "EUR", 1)
+        ),
+        1
+    ),
+    'versionInfo' => $this->createVersionInfo()
+)
+--EXPECT--
+Price including VAT: 120.00
+Price excluding VAT: 109.09

@@ -130,14 +130,14 @@ services:
     ezprice.api.vat.user_country:
         class: %ezprice.api.vat.user_country.class%
         arguments: 
-            - @request_stack
+            - @session
             - %ezprice.api.vat.user_country.default_country%
             - %ezprice.api.vat.user_country.session_variable_name%
         
     ezprice.api.multiprice.currency:
         class: %ezprice.api.multiprice.currency.class%
         arguments:
-            - @request_stack
+            - @session
             - @ezprice.api.storage_engine.legacy.handler.multiprice.currency
             - %ezprice.api.multiprice.currency.default_currency%
             - %ezprice.api.multiprice.currency.session_variable_name%

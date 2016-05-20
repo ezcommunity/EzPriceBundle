@@ -22,7 +22,7 @@ class Price
      * 
      * @var string
      */
-    public $currency;
+    public $currency_code;
 
     /**
      * The price.
@@ -45,7 +45,7 @@ class Price
      */
     public function __construct($row)
     {
-        $this->currency = $row['currency_code'];
+        $this->currency_code = $row['currency_code'];
         $this->value = $row['value'];
         $this->id = $row['id'];
     }
