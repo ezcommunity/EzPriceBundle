@@ -80,7 +80,8 @@ class MultiPriceExtensionTest extends Twig_Test_IntegrationTestCase
             array(
                 'value' => $value, 
                 'currency_code' => $currency,
-                'id' => $id
+                'id' => $id,
+                'type' => 1
             )
         );
     }
