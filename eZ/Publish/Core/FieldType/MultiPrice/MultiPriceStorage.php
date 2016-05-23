@@ -45,7 +45,7 @@ use eZ\Publish\SPI\Persistence\Content\Field;
 class MultiPriceStorage extends GatewayBasedStorage
 {
     /**
-     * NOT SUPPORTED - Store the field data
+     * Store the field data
      * 
      * @param \eZ\Publish\SPI\Persistence\Content\Field $field
      * @param array $context
@@ -54,8 +54,8 @@ class MultiPriceStorage extends GatewayBasedStorage
      */
     public function storeFieldData(VersionInfo $versionInfo, Field $field, array $context)
     {
-        // Update the prices from the new stack
-        throw new Exception("Updating MultiPrice fields is not yet supported.");
+        $gateway = $this->getGateway($context);
+        return $gateway->storeFieldData($field, $versionInfo->versionNo);
     }
 
     /**
@@ -81,7 +81,6 @@ class MultiPriceStorage extends GatewayBasedStorage
      */
     public function deleteFieldData(VersionInfo $versionInfo, array $fieldIds, array $context)
     {
-        // Only the UserService may update user data
         throw new Exception("Deleting MultiPrice fields is not yet supported.");
     }
 

@@ -11,6 +11,7 @@
  */
 
 namespace EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\MultiPrice\MultiPriceStorage;
+use eZ\Publish\SPI\Persistence\Content\Field;
 
 use eZ\Publish\Core\FieldType\StorageGateway;
 
@@ -25,4 +26,14 @@ abstract class Gateway extends StorageGateway
      * @return array
      */
     abstract public function getFieldData($fieldId, $versionNo);
+
+    /**
+     * Store the additional data for this field
+     * 
+     * @param  Field $field      The field to store the values for
+     * @param  int   $versionId  The ID of the version of the field that we are storing
+     * 
+     * @return bool
+     */
+    abstract public function storeFieldData(Field $field, $versionInfo);
 }
