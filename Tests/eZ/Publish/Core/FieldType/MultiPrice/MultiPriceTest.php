@@ -52,6 +52,7 @@ class MultiPriceTest extends FieldTypeTest
                 'currency_code' => 'GBP',
                 'value'         => $value,
                 'id'            => 0,
+                'type' => 1
             )
         );
     }
@@ -109,19 +110,19 @@ class MultiPriceTest extends FieldTypeTest
             ),
             array(
                 new MultiPriceValue(array('GBP' => $this->getGBPPriceObject(23.421)), 1, true),
-                array('prices' => array('GBP' => array('value' => 23.421, 'currency_code' => 'GBP', 'id' => 0)), 'vatTypeId' => 1,  'isVatIncluded' => true),
+                array('prices' => array('GBP' => array('value' => 23.421, 'currency_code' => 'GBP', 'id' => 0, 'type' => 1)), 'vatTypeId' => 1,  'isVatIncluded' => true),
             ),
             array(
                 new MultiPriceValue(array('GBP' => $this->getGBPPriceObject(23.422)), 1, false),
-                array('prices' => array('GBP' => array('value' => 23.422, 'currency_code' => 'GBP', 'id' => 0)), 'vatTypeId' => 1, 'isVatIncluded' => false),
+                array('prices' => array('GBP' => array('value' => 23.422, 'currency_code' => 'GBP', 'id' => 0, 'type' => 1)), 'vatTypeId' => 1, 'isVatIncluded' => false),
             ),
             array(
                 new MultiPriceValue(array('GBP' => $this->getGBPPriceObject(23.423)), -1, false),
-                array('prices' => array('GBP' => array('value' => 23.423, 'currency_code' => 'GBP', 'id' => 0)), 'vatTypeId' => -1, 'isVatIncluded' => false),
+                array('prices' => array('GBP' => array('value' => 23.423, 'currency_code' => 'GBP', 'id' => 0, 'type' => 1)), 'vatTypeId' => -1, 'isVatIncluded' => false),
             ),
             array(
                 new MultiPriceValue(array('GBP' => $this->getGBPPriceObject(23.42)), 2, false),
-                array('prices' => array('GBP' => array('value' => 23.42, 'currency_code' => 'GBP', 'id' => 0)), 'vatTypeId' => 2, 'isVatIncluded' => false),
+                array('prices' => array('GBP' => array('value' => 23.42, 'currency_code' => 'GBP', 'id' => 0, 'type' => 1)), 'vatTypeId' => 2, 'isVatIncluded' => false),
             ),
         );
     }
@@ -134,19 +135,19 @@ class MultiPriceTest extends FieldTypeTest
                 new MultiPriceValue(),
             ),
             array(
-                array('prices' => array('GBP' => array('value' => 23.421, 'currency_code' => 'GBP', 'id' => 0)), 'vatTypeId' => 1,  'isVatIncluded' => true),
+                array('prices' => array('GBP' => array('value' => 23.421, 'currency_code' => 'GBP', 'id' => 0, 'type' => 1)), 'vatTypeId' => 1,  'isVatIncluded' => true),
                 new MultiPriceValue(array('GBP' => $this->getGBPPriceObject(23.421)), 1, true),
             ),
             array(
-                array('prices' => array('GBP' => array('value' => 23.422, 'currency_code' => 'GBP', 'id' => 0)), 'vatTypeId' => 1, 'isVatIncluded' => false),
+                array('prices' => array('GBP' => array('value' => 23.422, 'currency_code' => 'GBP', 'id' => 0, 'type' => 1)), 'vatTypeId' => 1, 'isVatIncluded' => false),
                 new MultiPriceValue(array('GBP' => $this->getGBPPriceObject(23.422)), 1, false),
             ),
             array(
-                array('prices' => array('GBP' => array('value' => 23.423, 'currency_code' => 'GBP', 'id' => 0)), 'vatTypeId' => -1, 'isVatIncluded' => false),
+                array('prices' => array('GBP' => array('value' => 23.423, 'currency_code' => 'GBP', 'id' => 0, 'type' => 1)), 'vatTypeId' => -1, 'isVatIncluded' => false),
                 new MultiPriceValue(array('GBP' => $this->getGBPPriceObject(23.423)), -1, false),
             ),
             array(
-                array('prices' => array('GBP' => array('value' => 23.42, 'currency_code' => 'GBP', 'id' => 0)), 'vatTypeId' => 2, 'isVatIncluded' => false),
+                array('prices' => array('GBP' => array('value' => 23.42, 'currency_code' => 'GBP', 'id' => 0, 'type' => 1)), 'vatTypeId' => 2, 'isVatIncluded' => false),
                 new MultiPriceValue(array('GBP' => $this->getGBPPriceObject(23.42)), 2, false),
             ),
         );

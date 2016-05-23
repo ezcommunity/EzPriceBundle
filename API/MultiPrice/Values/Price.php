@@ -37,6 +37,12 @@ class Price
     public $id;
 
     /**
+     * Whether it is a custom price or not
+     * @var int
+     */
+    public $type;
+
+    /**
      * __construct.
      *
      * @param array $row with keys currency_code, value and id.
@@ -44,7 +50,8 @@ class Price
     public function __construct($row)
     {
         $this->currency_code = $row['currency_code'];
-        $this->value = $row['value'];
+        $this->value = (float)$row['value'];
         $this->id = $row['id'];
+        $this->type = $row['type'];
     }
 }

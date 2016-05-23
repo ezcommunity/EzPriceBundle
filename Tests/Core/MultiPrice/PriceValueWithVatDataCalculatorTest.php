@@ -32,7 +32,8 @@ class PriceValueWithVatDataCalculatorTest extends PHPUnit_Framework_TestCase
             array(
                 'value'         => 180,
                 'currency_code' => 'GBP',
-                'id'            => 0,
+                'id' => 0,
+                'type' => 1,
             )
         );
 
@@ -69,7 +70,8 @@ class PriceValueWithVatDataCalculatorTest extends PHPUnit_Framework_TestCase
             array(
                 'value'         => 120,
                 'currency_code' => 'GBP',
-                'id'            => 0,
+                'id' => 0,
+                'type' => 1,
             )
         );
 

@@ -77,6 +77,7 @@ class MultiPriceExtensionTest extends Twig_Test_IntegrationTestCase
                 'value'         => $value,
                 'currency_code' => $currency,
                 'id'            => $id,
+                'type'          => 1,
             )
         );
     }
