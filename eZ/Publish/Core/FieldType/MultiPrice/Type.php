@@ -114,24 +114,6 @@ class Type extends FieldType
                 );
         }
 
-        // Validate prices are all floats.
-        foreach ($value->prices as $currency => $price) {
-            if (!$price instanceof PriceValueObject) {
-                throw new InvalidArgumentType(
-                    '$value->prices[\'' . $currency . '\']',
-                    '\EzSystems\EzPriceBundle\API\MultiPrice\Values\Price',
-                    $price
-                );
-
-            } elseif (!is_float($price->value) && !is_int($price->value)) {
-                throw new InvalidArgumentType(
-                    '$value->prices[\'' . $currency . '\']->value',
-                    'float|int',
-                    $price->value
-                );
-
-            }
-        }
         // Validate vatTypeId, should not be null
         if ($value->vatTypeId === null) {
             throw new InvalidArgumentType(
