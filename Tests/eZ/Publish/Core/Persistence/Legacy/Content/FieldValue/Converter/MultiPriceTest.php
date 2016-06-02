@@ -43,7 +43,7 @@ class MultiPriceTest extends PHPUnit_Framework_TestCase
             array(
                 'data' => array(
                     'isVatIncluded' => $isVatIncluded,
-                    'vatRateId'     => $vatRateId,
+                    'vatTypeId'     => $vatRateId,
                 ),
             )
         );
@@ -73,7 +73,7 @@ class MultiPriceTest extends PHPUnit_Framework_TestCase
 
         $this->converter->toFieldValue($storageFieldValue, $fieldValue);
 
-        self::assertEquals($vatRateId, $fieldValue->data['vatRateId']);
+        self::assertEquals($vatRateId, $fieldValue->data['vatTypeId']);
         self::assertEquals($isVatIncluded, $fieldValue->data['isVatIncluded']);
     }
 }
