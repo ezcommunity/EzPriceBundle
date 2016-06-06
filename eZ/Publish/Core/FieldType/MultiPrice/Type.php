@@ -205,7 +205,7 @@ class Type extends FieldType
         return new FieldValue(
             array(
                 'data'         => array(
-                                    'vatTypeId' => $hash['vatTypeId'],
+                                    'vatTypeId'     => $hash['vatTypeId'],
                                     'isVatIncluded' => $hash['isVatIncluded'],
                                 ),
                 'externalData' => array(
