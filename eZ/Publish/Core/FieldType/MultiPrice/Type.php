@@ -201,17 +201,17 @@ class Type extends FieldType
     public function toPersistenceValue(SPIValue $value)
     {
         $hash = $this->toHash($value);
-        
+
         return new FieldValue(
             array(
                 'data'         => array(
                                     'vatTypeId' => $hash['vatTypeId'],
-                                    'isVatIncluded' => $hash['isVatIncluded']
+                                    'isVatIncluded' => $hash['isVatIncluded'],
                                 ),
                 'externalData' => array(
-                                    'prices' => $hash['prices']
+                                    'prices' => $hash['prices'],
                                 ),
-                'sortKey'      => null
+                'sortKey'      => null,
             )
         );
     }
