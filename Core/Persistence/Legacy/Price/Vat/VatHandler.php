@@ -54,7 +54,6 @@ class VatHandler implements VatHandlerInterface
                 $vatRateId = $this->dynamicVatHandler->getCorrectVatRateId();
             }
         }
-
         $vatRateData = $this->gateway->getVatRateData($vatRateId);
 
         return new VatRate($vatRateData);

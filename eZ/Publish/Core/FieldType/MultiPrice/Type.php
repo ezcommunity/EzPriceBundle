@@ -162,6 +162,7 @@ class Type extends FieldType
         foreach ($hash['prices'] as $currency => $price) {
             $hash['prices'][$currency] = new PriceValueObject($price);
         }
+
         $hash['vatTypeId'] = array_key_exists('vatTypeId', $hash) ? $hash['vatTypeId'] : null;
         $hash['isVatIncluded'] = array_key_exists('isVatIncluded', $hash) ? $hash['isVatIncluded'] : true;
 
@@ -199,10 +200,17 @@ class Type extends FieldType
 
     public function toPersistenceValue(SPIValue $value)
     {
+        $hash = $this->toHash($value);
+
         return new FieldValue(
             array(
-                'data'         => null,
-                'externalData' => $this->toHash($value),
+                'data'         => array(
+                                    'vatTypeId'     => $hash['vatTypeId'],
+                                    'isVatIncluded' => $hash['isVatIncluded'],
+                                ),
+                'externalData' => array(
+                                    'prices' => $hash['prices'],
+                                ),
                 'sortKey'      => null,
             )
         );
@@ -221,7 +229,7 @@ class Type extends FieldType
     {
         return new Value(
             $fieldValue->externalData,
-            $fieldValue->data['vatRateId'],
+            $fieldValue->data['vatTypeId'],
             $fieldValue->data['isVatIncluded']
         );
     }

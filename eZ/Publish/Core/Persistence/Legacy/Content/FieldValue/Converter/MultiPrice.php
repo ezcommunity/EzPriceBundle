@@ -40,7 +40,7 @@ class MultiPrice implements Converter
      */
     public function toStorageValue(FieldValue $value, StorageFieldValue $storageFieldValue)
     {
-        $storageFieldValue->dataText = $value->data['vatRateId'].','.(int) $value->data['isVatIncluded'];
+        $storageFieldValue->dataText = $value->data['vatTypeId'].','.(int) $value->data['isVatIncluded'];
         $storageFieldValue->sortKeyInt = $value->sortKey;
     }
 
@@ -58,7 +58,7 @@ class MultiPrice implements Converter
 
         if (strstr($value->dataText, ',') !== false) {
             list($vatRateId, $isVatIncluded) = explode(',', $value->dataText);
-            $fieldValue->data['vatRateId'] = $vatRateId;
+            $fieldValue->data['vatTypeId'] = $vatRateId;
             $fieldValue->data['isVatIncluded'] = ($isVatIncluded == 1) ? true : false;
         }
         $fieldValue->sortKey = $value->sortKeyInt;
