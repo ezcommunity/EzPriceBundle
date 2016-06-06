@@ -58,11 +58,11 @@ class LegacyStorage extends Gateway
     }
 
     /**
-     * Used to store the values of the prices in the ezmultiprice data table
-     * 
-     * @param  Field $field     The field to store the values for
-     * @param  int   $versionNo The ID of the version of the field that we are storing
-     * 
+     * Used to store the values of the prices in the ezmultiprice data table.
+     *
+     * @param Field $field     The field to store the values for
+     * @param int   $versionNo The ID of the version of the field that we are storing
+     *
      * @return bool
      */
     public function storeFieldData(Field $field, $versionNo)
@@ -74,6 +74,7 @@ class LegacyStorage extends Gateway
                 $this->addNewCurrencyPrice($price, $field->id, $versionNo);
             }
         }
+
         return true;
     }
 
@@ -112,18 +113,17 @@ class LegacyStorage extends Gateway
     }
 
     /**
-     * Update the row in the ezmultipricedata table for a specific currency
-     * 
-     * @param  array $priceData The values that we will use to update the price
-     *                          row with
-     * @param  int   $fieldId   The id of the field that we are updating
-     * @param  int   $versionNo The id of the version that we are updating
-     * 
+     * Update the row in the ezmultipricedata table for a specific currency.
+     *
+     * @param array $priceData The values that we will use to update the price
+     *                         row with
+     * @param int   $fieldId   The id of the field that we are updating
+     * @param int   $versionNo The id of the version that we are updating
+     *
      * @return null
      */
     protected function updateCurrencyPrice($priceData, $fieldId, $versionNo)
     {
-
         $updateQuery = $this->dbHandler->createUpdateQuery();
         $updateQuery->update($this->dbHandler->quoteTable('ezmultipricedata'))
             ->set(
@@ -147,7 +147,7 @@ class LegacyStorage extends Gateway
                     $updateQuery->expr->eq(
                         $this->dbHandler
                             ->quoteColumn('currency_code'),
-                        $updateQuery->bindValue($priceData['currency_code'], null, \PDO::PARAM_STR)  
+                        $updateQuery->bindValue($priceData['currency_code'], null, \PDO::PARAM_STR)
                     )
                 )
             );
@@ -156,12 +156,12 @@ class LegacyStorage extends Gateway
     }
 
     /**
-     * Check if there is an existing record for this currency
-     * 
-     * @param  string $currencyCode The currency code that we are updating
-     * @param  int    $fieldId      The id of the field that we are looking for.
-     * @param  int    $versionNo    The Version id of the field that we are looking for
-     * 
+     * Check if there is an existing record for this currency.
+     *
+     * @param string $currencyCode The currency code that we are updating
+     * @param int    $fieldId      The id of the field that we are looking for.
+     * @param int    $versionNo    The Version id of the field that we are looking for
+     *
      * @return bool true if data exists, otherwise false
      */
     protected function doesCurrencyDataExist($currencyCode, $fieldId, $versionNo)
@@ -172,9 +172,9 @@ class LegacyStorage extends Gateway
     /**
      * Get the row for a currency on a field.
      *
-     * @param  string $currencyCode The currency code that we are updating
-     * @param  int    $fieldId      The id of the field that we are looking for.
-     * @param  int    $versionNo    The Version id of the field that we are looking for
+     * @param string $currencyCode The currency code that we are updating
+     * @param int    $fieldId      The id of the field that we are looking for.
+     * @param int    $versionNo    The Version id of the field that we are looking for
      *
      * @return null|array Null if not found, otherwise return the currency row
      */
@@ -183,46 +183,46 @@ class LegacyStorage extends Gateway
         $query = $this->dbHandler
                     ->createSelectQuery();
         $query
-            ->select(array( 'currency_code', 'id', 'value', 'type' ))
+            ->select(array('currency_code', 'id', 'value', 'type'))
             ->from($this->dbHandler
-                        ->quoteTable( 'ezmultipricedata' )
+                        ->quoteTable('ezmultipricedata')
             )
             ->where(
                 $query->expr->lAnd(
                     $query->expr->eq(
                         $this->dbHandler
-                            ->quoteColumn( 'contentobject_attr_id' ),
-                        $query->bindValue( $fieldId, null, PDO::PARAM_INT )
+                            ->quoteColumn('contentobject_attr_id'),
+                        $query->bindValue($fieldId, null, PDO::PARAM_INT)
                     ),
                     $query->expr->eq(
                         $this->dbHandler
-                            ->quoteColumn( 'contentobject_attr_version' ),
-                        $query->bindValue( $versionNo, null, PDO::PARAM_INT )
+                            ->quoteColumn('contentobject_attr_version'),
+                        $query->bindValue($versionNo, null, PDO::PARAM_INT)
                     ),
                     $query->expr->eq(
                         $this->dbHandler
-                            ->quoteColumn( 'currency_code' ),
-                        $query->bindValue( $currencyCode, null, PDO::PARAM_STR )
+                            ->quoteColumn('currency_code'),
+                        $query->bindValue($currencyCode, null, PDO::PARAM_STR)
                     )
                 )
             )
             ->limit(1); // There should only be 1 row foreach currency;
-                
+
         $statement = $query->prepare();
         $statement->execute();
 
-
         $rows = $statement->fetchAll();
+
         return (count($rows) === 0) ? null : $rows[0];
     }
 
     /**
-     * Insert new currency for a field 
-     * 
-     * @param  array $priceData The values that we will use create the price row
-     * @param  int   $fieldId   The id of the field that we are inserting the 
-     *                          new currency for
-     * @param  int   $versionNo The id of the version that we are inserting
+     * Insert new currency for a field.
+     *
+     * @param array $priceData The values that we will use create the price row
+     * @param int   $fieldId   The id of the field that we are inserting the
+     *                         new currency for
+     * @param int   $versionNo The id of the version that we are inserting
      *
      * @return null
      */

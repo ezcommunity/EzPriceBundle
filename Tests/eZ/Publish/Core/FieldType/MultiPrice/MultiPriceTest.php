@@ -52,7 +52,7 @@ class MultiPriceTest extends FieldTypeTest
                 'currency_code' => 'GBP',
                 'value'         => $value,
                 'id'            => 0,
-                'type' => 1
+                'type'          => 1,
             )
         );
     }

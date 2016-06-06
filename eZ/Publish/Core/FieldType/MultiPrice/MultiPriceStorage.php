@@ -43,8 +43,8 @@ use eZ\Publish\SPI\Persistence\Content\VersionInfo;
 class MultiPriceStorage extends GatewayBasedStorage
 {
     /**
-     * Store the field data
-     * 
+     * Store the field data.
+     *
      * @param \eZ\Publish\SPI\Persistence\Content\Field $field
      * @param array                                     $context
      *
@@ -53,6 +53,7 @@ class MultiPriceStorage extends GatewayBasedStorage
     public function storeFieldData(VersionInfo $versionInfo, Field $field, array $context)
     {
         $gateway = $this->getGateway($context);
+
         return $gateway->storeFieldData($field, $versionInfo->versionNo);
     }
 
