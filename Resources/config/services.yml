@@ -10,6 +10,30 @@ parameters:
     ezprice.api.storage_engine.legacy.handler.ezprice.contentvathandler.factory.class: EzSystems\EzPriceBundle\ApiLoader\LegacyContentVatHandlerFactory
     ezprice.api.storage_engine.legacy.handler.ezprice.contentvathandler.class: EzSystems\EzPriceBundle\Core\Persistence\Legacy\Price\ContentVat\ContentVatHandler
 
+    # MultiPrice field type
+    ezprice.fieldtype.ezmultiprice.class: EzSystems\EzPriceBundle\eZ\Publish\Core\FieldType\MultiPrice\Type
+    ezprice.fieldType.ezmultiprice.converter.class: EzSystems\EzPriceBundle\eZ\Publish\Core\Persistence\Legacy\Content\FieldValue\Converter\MultiPrice
+    # Twig Extension
+    ezmultiprice.twig.extension.class: EzSystems\EzPriceBundle\Twig\Extension\MultiPriceExtension
+    ezprice.api.multiprice.pricewithvatcalculator.class: EzSystems\EzPriceBundle\Core\MultiPrice\PriceValueWithVatDataCalculator
+    #Dynamic VAT Handler
+    ezprice.api.vat.dynamic_vat_handler.class: EzSystems\EzPriceBundle\Core\Vat\Handler\DynamicVatHandler
+    ezprice.vat.dynamic_vat_handler.are_product_category_vat_rules_enabled: false
+    ezprice.vat.dynamic_vat_handler.default_vat_rate_id: 85
+    #User Country
+    ezprice.api.vat.user_country.class: EzSystems\EzPriceBundle\Core\Vat\UserCountry
+    ezprice.api.vat.user_country.default_country: "GB"
+    ezprice.api.vat.user_country.session_variable_name: "UserPreferredCountry"
+    #Fetching vat rules
+    ezprice.api.storage_engine.legacy.handler.vat.country_vat_rules.class: EzSystems\EzPriceBundle\Core\Persistence\Legacy\Vat\CountryVatRules\CountryVatRulesHandler
+    ezprice.api.storage_engine.legacy.vat.country_vat_rules.class: EzSystems\EzPriceBundle\Core\Persistence\Legacy\Vat\CountryVatRules\Gateway\DoctrineDatabase
+    ezprice.api.vat.country_vat_rules.class: EzSystems\EzPriceBundle\Core\Vat\CountryVatRulesService
+    # Currency
+    ezprice.api.multiprice.currency.class: EzSystems\EzPriceBundle\Core\MultiPrice\CurrencyService
+    ezprice.api.storage_engine.legacy.handler.multiprice.currency: EzSystems\EzPriceBundle\Core\Persistence\Legacy\MultiPrice\Currency\CurrencyHandler
+    ezprice.api.storage_engine.legacy.multiprice.currency: EzSystems\EzPriceBundle\Core\Persistence\Legacy\MultiPrice\Currency\Gateway\DoctrineDatabase
+    ezprice.api.multiprice.currency.default_currency: "GBP"
+    ezprice.api.multiprice.currency.session_variable_name: "UserPreferredCurrency"
 services:
     ezprice.fieldType.ezprice.class:
         parent: ezpublish.fieldType
@@ -61,6 +85,7 @@ services:
         factory_method: buildLegacyVatHandler
         arguments:
             - @ezpublish.api.storage_engine.legacy.dbhandler
+            - @?ezprice.api.vat.dynamic_vat_handler
 
     ezprice.api.storage_engine.legacy.handler.ezprice.contentvathandler:
         class: %ezprice.api.storage_engine.legacy.handler.ezprice.contentvathandler.class%
@@ -68,3 +93,74 @@ services:
         factory_method: buildLegacyContentVatHandler
         arguments:
             - @ezpublish.api.storage_engine.legacy.dbhandler
+
+    ezprice.fieldType.ezmultiprice:
+        parent: ezpublish.fieldType
+        class: %ezprice.fieldType.ezmultiprice.class%
+        tags:
+            - {name: ezpublish.fieldType, alias: ezmultiprice}
+
+    ezprice.fieldType.ezmultiprice.converter:
+        class: %ezprice.fieldType.ezmultiprice.converter.class%
+        tags:
+            - {name: ezpublish.storageEngine.legacy.converter, alias: ezmultiprice, lazy: true, callback: '::create'}
+
+    ezprice.api.vat.dynamic_vat_handler:
+        class: %ezprice.api.vat.dynamic_vat_handler.class%
+        arguments: 
+            - @ezprice.api.vat.country_vat_rules
+            - @ezprice.api.vat.user_country
+            - %ezprice.vat.dynamic_vat_handler.default_vat_rate_id%
+
+    ezprice.api.vat.country_vat_rules:
+        class: %ezprice.api.vat.country_vat_rules.class%
+        arguments:
+            - @ezprice.api.storage_engine.legacy.handler.vat.country_vat_rules
+
+    ezprice.api.storage_engine.legacy.handler.vat.country_vat_rules:
+        class: %ezprice.api.storage_engine.legacy.handler.vat.country_vat_rules.class%
+        arguments:
+            - @ezprice.api.storage_engine.legacy.vat.country_vat_rules        
+
+    ezprice.api.storage_engine.legacy.vat.country_vat_rules:
+        class: %ezprice.api.storage_engine.legacy.vat.country_vat_rules.class%
+        arguments: 
+            - @ezpublish.api.storage_engine.legacy.dbhandler
+
+    ezprice.api.vat.user_country:
+        class: %ezprice.api.vat.user_country.class%
+        arguments: 
+            - @session
+            - %ezprice.api.vat.user_country.default_country%
+            - %ezprice.api.vat.user_country.session_variable_name%
+        
+    ezprice.api.multiprice.currency:
+        class: %ezprice.api.multiprice.currency.class%
+        arguments:
+            - @session
+            - @ezprice.api.storage_engine.legacy.handler.multiprice.currency
+            - %ezprice.api.multiprice.currency.default_currency%
+            - %ezprice.api.multiprice.currency.session_variable_name%
+
+    ezprice.api.storage_engine.legacy.handler.multiprice.currency:
+        class: %ezprice.api.storage_engine.legacy.handler.multiprice.currency%
+        arguments:
+            - @ezprice.api.storage_engine.legacy.multiprice.currency
+
+    ezprice.api.storage_engine.legacy.multiprice.currency:
+        class: %ezprice.api.storage_engine.legacy.multiprice.currency%
+        arguments: 
+            - @ezpublish.api.storage_engine.legacy.dbhandler
+
+    ezmultiprice.twig.extension:
+        class: %ezmultiprice.twig.extension.class%
+        tags:
+            - { name: twig.extension }
+        arguments:
+            - @ezprice.api.service.contentvatservice
+            - @ezprice.api.multiprice.pricewithvatcalculator
+            - @ezprice.api.multiprice.currency
+            - @?logger
+            
+    ezprice.api.multiprice.pricewithvatcalculator:
+        class: %ezprice.api.multiprice.pricewithvatcalculator.class%

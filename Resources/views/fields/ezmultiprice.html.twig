@@ -1,0 +1,6 @@
+{% block ezmultiprice_field %}
+{% spaceless %}
+    {% set priceInfo = ezmultiprice_value( versionInfo, field ) %}
+    <span class="attribute-price">{{priceInfo.currency.symbol}}{{priceInfo.priceIncludingVat|number_format(2)}}</span>
+{% endspaceless %}
+{% endblock %}
