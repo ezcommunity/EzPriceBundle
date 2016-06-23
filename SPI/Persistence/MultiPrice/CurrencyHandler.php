@@ -22,4 +22,11 @@ interface CurrencyHandler
      * @return Currency the currency object retrieved.
      */
     public function getCurrencyByCode($code);
+
+    /**
+     * Fetch all of the available currencies
+     * 
+     * @return Currency[] All currency objects
+     */
+    public function getAllCurrencies();
 }

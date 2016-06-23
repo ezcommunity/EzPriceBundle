@@ -94,4 +94,15 @@ class CurrencyService implements CurrencyServiceInterface
         return $this->currencyHandler
                     ->getCurrencyByCode($this->getUsersCurrencyCode());
     }
+    
+    /**
+     * Fetch all of the available currencies
+     * 
+     * @return Currency[] All currency objects
+     */
+    public function getAllCurrencies()
+    {
+        return $this->currencyHandler
+                    ->getAllCurrencies();
+    }
 }

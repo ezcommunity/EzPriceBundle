@@ -34,4 +34,11 @@ abstract class Gateway
      * @return Currency with the values populated from $data.
      */
     abstract public function translateDataToCurrency($data);
+
+    /**
+     * Used to fetch all currencies.
+     * 
+     * @return array with the currencies data in it.
+     */
+    abstract public function getAllCurrencies();
 }

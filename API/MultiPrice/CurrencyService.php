@@ -30,4 +30,11 @@ interface CurrencyService
      *                         applied to prices for the current user.
      */
     public function getUsersCurrency();
+
+    /**
+     * Fetch all available currencies.
+     * 
+     * @return Values\Currency[] Array of all the currency objects. 
+     */
+    public function getAllCurrencies();
 }

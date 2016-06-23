@@ -53,4 +53,21 @@ class CurrencyHandler implements CurrencyHandlerInterface
                             ->getCurrencyByCode($code)
                     );
     }
+    
+    /**
+     * Fetch all of the available currencies
+     * 
+     * @return Currency[] All currency objects
+     */
+    public function getAllCurrencies()
+    {
+        return array_map(
+            function($item){
+                return $this->gateway->translateDataToCurrency($item);
+            }, 
+            $this->gateway
+                ->getAllCurrencies()
+        );
+
+    }
 }

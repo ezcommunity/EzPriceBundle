@@ -70,6 +70,28 @@ class DoctrineDatabase extends Gateway
     }
 
     /**
+     * Fetch all currencies from the ezcurrencydata table.
+     * 
+     * @return array with the currencies data in it.
+     */
+    public function getAllCurrencies()
+    {
+        $query = $this->handler->createSelectQuery();
+        $query
+            ->select(array('code', 'locale', 'symbol', 'id'))
+            ->from($this->handler->quoteTable('ezcurrencydata'));
+
+        $statement = $query->prepare();
+        $statement->execute();
+
+        if ($statement->rowCount() === 0) {
+            return array();
+        }
+
+        return $statement->fetchAll();   
+    }
+
+    /**
      * Translate the data retrieved from this gateway into a currency object.
      *
      * @param array $data with keys id, code, symbol and locale.
