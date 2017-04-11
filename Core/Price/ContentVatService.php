@@ -9,7 +9,7 @@
 namespace EzSystems\EzPriceBundle\Core\Price;
 
 use EzSystems\EzPriceBundle\API\Price\ContentVatService as ContentVatServiceInterface;
-use EzSystems\EzPriceBundle\API\Price\VatService;
+use EzSystems\EzPriceBundle\API\Price\VatService as VatServiceInterface;
 use EzSystems\EzPriceBundle\SPI\Persistence\Price\ContentVatHandler;
 
 class ContentVatService implements ContentVatServiceInterface
@@ -28,7 +28,7 @@ class ContentVatService implements ContentVatServiceInterface
      * @param \EzSystems\EzPriceBundle\SPI\Persistence\Price\ContentVatHandler $contentVatHandler
      * @param \EzSystems\EzPriceBundle\API\Price\VatService $vatService;
      */
-    public function __construct( ContentVatHandler $contentVatHandler, VatService $vatService )
+    public function __construct( ContentVatHandler $contentVatHandler, VatServiceInterface $vatService )
     {
         $this->contentVatHandler = $contentVatHandler;
         $this->vatService = $vatService;
